@@ -12,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { Slideshow } from "@/components/Slideshow";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -81,6 +82,9 @@ export default function LandingPage() {
         </div>
         <div className="relative h-16 bg-gradient-to-b from-transparent to-white" />
       </section>
+
+      {/* Photo Slideshow */}
+      <Slideshow />
 
       {/* About Section */}
       <section id="about" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
