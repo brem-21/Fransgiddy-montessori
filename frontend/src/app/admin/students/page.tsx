@@ -120,7 +120,7 @@ export default function AdminStudentsPage() {
   const handleDeactivate = async (student: Student) => {
     if (!confirm(`Deactivate ${student.firstName} ${student.lastName}?`)) return;
     try {
-      await studentApi.update(student.id, { active: false });
+      await studentApi.deactivate(student.id);
       toast({ title: "Deactivated", description: "Student has been deactivated." });
       fetchStudents();
     } catch {

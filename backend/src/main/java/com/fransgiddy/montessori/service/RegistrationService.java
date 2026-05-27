@@ -19,7 +19,6 @@ public class RegistrationService {
     public Registration submit(RegistrationRequest request) {
         Registration registration = Registration.builder()
                 .parentName(request.parentName())
-                .parentEmail(request.parentEmail())
                 .parentPhone(request.parentPhone())
                 .childFirstName(request.childFirstName())
                 .childLastName(request.childLastName())

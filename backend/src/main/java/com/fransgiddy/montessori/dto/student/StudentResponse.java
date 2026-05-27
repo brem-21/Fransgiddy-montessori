@@ -11,7 +11,6 @@ public record StudentResponse(
         LocalDate dateOfBirth,
         String parentName,
         String parentPhone,
-        String parentEmail,
         LocalDate enrollmentDate,
         boolean active,
         LocalDateTime createdAt

@@ -31,7 +31,6 @@ public class StudentService {
                 .dateOfBirth(request.dateOfBirth())
                 .parentName(request.parentName())
                 .parentPhone(request.parentPhone())
-                .parentEmail(request.parentEmail())
                 .enrollmentDate(request.enrollmentDate())
                 .active(true)
                 .build();
@@ -75,7 +74,6 @@ public class StudentService {
         student.setDateOfBirth(request.dateOfBirth());
         student.setParentName(request.parentName());
         student.setParentPhone(request.parentPhone());
-        student.setParentEmail(request.parentEmail());
         student.setEnrollmentDate(request.enrollmentDate());
 
         student = studentRepository.save(student);
@@ -99,7 +97,6 @@ public class StudentService {
                 student.getDateOfBirth(),
                 student.getParentName(),
                 student.getParentPhone(),
-                student.getParentEmail(),
                 student.getEnrollmentDate(),
                 student.isActive(),
                 student.getCreatedAt()

@@ -77,6 +77,9 @@ export const studentApi = {
   update: (id: number, data: Partial<Student>) =>
     apiClient.put<ApiResponse<Student>>(`/students/${id}`, data),
 
+  deactivate: (id: number) =>
+    apiClient.delete<ApiResponse<null>>(`/students/${id}`),
+
   getByClass: (className: string) =>
     apiClient.get<ApiResponse<Student[]>>(`/students/class/${className}`),
 };

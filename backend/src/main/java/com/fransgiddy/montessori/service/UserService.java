@@ -48,7 +48,6 @@ public class UserService {
         result.put("id", user.getId());
         result.put("name", user.getName());
         result.put("phone", user.getPhone());
-        result.put("email", user.getEmail() != null ? user.getEmail() : "");
         result.put("active", user.isActive());
         return result;
     }
