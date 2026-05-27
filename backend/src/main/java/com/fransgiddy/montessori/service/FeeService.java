@@ -4,7 +4,9 @@ import com.fransgiddy.montessori.dto.fee.*;
 import com.fransgiddy.montessori.entity.Fee;
 import com.fransgiddy.montessori.entity.Student;
 import com.fransgiddy.montessori.entity.User;
+import com.fransgiddy.montessori.enums.Role;
 import com.fransgiddy.montessori.repository.FeeRepository;
+import com.fransgiddy.montessori.repository.SchoolClassRepository;
 import com.fransgiddy.montessori.repository.StudentRepository;
 import com.fransgiddy.montessori.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +27,19 @@ public class FeeService {
     private final FeeRepository feeRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final SchoolClassRepository schoolClassRepository;
 
-    public FeeResponse enterFee(FeeRequest request, String collectorEmail) {
+    public FeeResponse enterFee(FeeRequest request, String collectorPhone) {
         Student student = studentRepository.findById(request.studentId())
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + request.studentId()));
 
-        User collector = userRepository.findByEmail(collectorEmail)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + collectorEmail));
+        User collector = userRepository.findByPhone(collectorPhone)
+                .orElseThrow(() -> new RuntimeException("User not found with phone: " + collectorPhone));
+
+        if (collector.getRole() == Role.TEACHER &&
+                !schoolClassRepository.existsByTeachersIdAndName(collector.getId(), student.getClassName())) {
+            throw new RuntimeException("You are not assigned to this student's class.");
+        }
 
         Fee fee = new Fee();
         fee.setStudent(student);
@@ -44,18 +52,18 @@ public class FeeService {
         return toResponse(saved);
     }
 
-    public List<FeeResponse> getMyFees(String email) {
-        return feeRepository.findByCollectedByEmail(email)
+    public List<FeeResponse> getMyFees(String phone) {
+        return feeRepository.findByCollectedByPhone(phone)
                 .stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
-    public TeacherAnalyticsResponse getTeacherAnalytics(String email, LocalDate startDate, LocalDate endDate) {
+    public TeacherAnalyticsResponse getTeacherAnalytics(String phone, LocalDate startDate, LocalDate endDate) {
         LocalDate start = startDate != null ? startDate : YearMonth.now().atDay(1);
         LocalDate end = endDate != null ? endDate : LocalDate.now();
 
-        List<Fee> fees = feeRepository.findByCollectedByEmailAndFeeDateBetween(email, start, end);
+        List<Fee> fees = feeRepository.findByCollectedByPhoneAndFeeDateBetween(phone, start, end);
 
         BigDecimal totalAmount = fees.stream()
                 .map(Fee::getAmount)
@@ -118,7 +126,7 @@ public class FeeService {
     }
 
     public PrincipalAnalyticsResponse getPrincipalAnalytics(LocalDate startDate, LocalDate endDate,
-                                                             Long teacherId, Long studentId) {
+                                                             Long teacherId, Long studentId, String className) {
         LocalDate start = startDate != null ? startDate : YearMonth.now().atDay(1);
         LocalDate end = endDate != null ? endDate : LocalDate.now();
 
@@ -133,6 +141,11 @@ public class FeeService {
         if (studentId != null) {
             fees = fees.stream()
                     .filter(f -> f.getStudent().getId().equals(studentId))
+                    .collect(Collectors.toList());
+        }
+        if (className != null && !className.isBlank()) {
+            fees = fees.stream()
+                    .filter(f -> className.equals(f.getStudent().getClassName()))
                     .collect(Collectors.toList());
         }
 
@@ -180,9 +193,9 @@ public class FeeService {
                             .map(Fee::getAmount)
                             .reduce(BigDecimal.ZERO, BigDecimal::add);
                     String studentName = first.getStudent().getFirstName() + " " + first.getStudent().getLastName();
-                    String className = first.getStudent().getClassName();
+                    String studentClass = first.getStudent().getClassName();
                     return new PrincipalAnalyticsResponse.StudentSummary(
-                            entry.getKey(), studentName, className, studentTotal, studentFees.size());
+                            entry.getKey(), studentName, studentClass, studentTotal, studentFees.size());
                 })
                 .sorted(Comparator.comparing(PrincipalAnalyticsResponse.StudentSummary::totalAmount).reversed())
                 .limit(10)

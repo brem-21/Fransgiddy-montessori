@@ -78,7 +78,7 @@ export default function RegisterPage() {
                   Application Received!
                 </h2>
                 <p className="text-gray-500 mb-6 max-w-sm mx-auto">
-                  Thank you for your interest in Fransgiddy Montessori. We have
+                  Thank you for your interest in Fransgiddy Royal School. We have
                   received your application and will be in touch shortly.
                 </p>
                 <Button asChild variant="outline">

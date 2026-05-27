@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { PageTransition } from "@/components/PageTransition";
 
 export default function AdminLayout({
   children,
@@ -33,5 +34,9 @@ export default function AdminLayout({
 
   if (!user || user.role !== "PRINCIPAL") return null;
 
-  return <DashboardLayout role="PRINCIPAL">{children}</DashboardLayout>;
+  return (
+    <DashboardLayout role="PRINCIPAL">
+      <PageTransition>{children}</PageTransition>
+    </DashboardLayout>
+  );
 }

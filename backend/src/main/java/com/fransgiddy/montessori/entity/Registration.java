@@ -26,8 +26,6 @@ public class Registration {
     private String parentName;
 
     @Column(nullable = false)
-    private String parentEmail;
-
     private String parentPhone;
 
     @Column(nullable = false)

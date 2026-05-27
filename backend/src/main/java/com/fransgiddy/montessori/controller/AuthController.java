@@ -11,6 +11,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +31,11 @@ public class AuthController {
 
     @PostMapping("/invite")
     @PreAuthorize("hasRole('PRINCIPAL')")
-    public ResponseEntity<ApiResponse<Void>> inviteUser(
+    public ResponseEntity<ApiResponse<Map<String, String>>> inviteUser(
             @Valid @RequestBody InviteRequest request,
             @AuthenticationPrincipal User currentUser) {
-        authService.inviteUser(request, currentUser);
-        return ResponseEntity.ok(ApiResponse.of("Invite sent successfully", null));
+        String inviteLink = authService.inviteUser(request, currentUser);
+        return ResponseEntity.ok(ApiResponse.of("Invite created successfully", Map.of("inviteLink", inviteLink)));
     }
 
     @PostMapping("/register")
@@ -45,7 +47,12 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<Object>> getCurrentUser(@AuthenticationPrincipal User currentUser) {
-        Object userInfo = authService.getCurrentUser(currentUser.getEmail());
+        Object userInfo = authService.getCurrentUser(currentUser.getPhone());
         return ResponseEntity.ok(ApiResponse.of("User info retrieved", userInfo));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout() {
+        return ResponseEntity.ok(ApiResponse.of("Logged out successfully", null));
     }
 }

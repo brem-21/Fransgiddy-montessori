@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { PageTransition } from "@/components/PageTransition";
 
 export default function TeacherLayout({
   children,
@@ -34,5 +35,9 @@ export default function TeacherLayout({
   if (!user || (user.role !== "TEACHER" && user.role !== "PRINCIPAL"))
     return null;
 
-  return <DashboardLayout role="TEACHER">{children}</DashboardLayout>;
+  return (
+    <DashboardLayout role="TEACHER">
+      <PageTransition>{children}</PageTransition>
+    </DashboardLayout>
+  );
 }

@@ -3,6 +3,8 @@ package com.fransgiddy.montessori.repository;
 import com.fransgiddy.montessori.entity.Result;
 import com.fransgiddy.montessori.enums.Term;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +21,11 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
 
     Optional<Result> findByStudentIdAndSubjectIdAndTermAndAcademicYear(
             Long studentId, Long subjectId, Term term, String academicYear);
+
+    @Query("SELECT r FROM Result r WHERE r.student.className = :className AND r.term = :term AND r.academicYear = :academicYear")
+    List<Result> findByClassNameAndTermAndAcademicYear(
+        @Param("className") String className,
+        @Param("term") Term term,
+        @Param("academicYear") String academicYear
+    );
 }

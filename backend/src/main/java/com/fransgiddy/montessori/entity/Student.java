@@ -37,8 +37,6 @@ public class Student {
 
     private String parentPhone;
 
-    private String parentEmail;
-
     private LocalDate enrollmentDate;
 
     @Builder.Default

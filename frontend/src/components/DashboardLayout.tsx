@@ -42,11 +42,17 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
       <Sidebar role={role} />
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shadow-sm">
-          <div />
+        <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
+          <div>
+            <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">
+              {new Date().toLocaleDateString("en-GH", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+            </p>
+            <p className="text-base font-semibold text-gray-800">
+              Welcome back, <span className="text-purple-700">{user.name}</span> 👋
+            </p>
+          </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600 font-medium">{user.name}</span>
-            <Badge variant="secondary">{roleLabel}</Badge>
+            <Badge variant="secondary" className="text-xs">{roleLabel}</Badge>
           </div>
         </header>
 

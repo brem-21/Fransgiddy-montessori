@@ -9,8 +9,6 @@ import com.fransgiddy.montessori.repository.UserRepository;
 import com.fransgiddy.montessori.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,39 +29,39 @@ public class AuthService {
     private final InviteRepository inviteRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender mailSender;
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
     public LoginResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.email(), request.password())
+                new UsernamePasswordAuthenticationToken(request.phone(), request.password())
         );
 
         User user = (User) authentication.getPrincipal();
         String token = jwtUtil.generateToken(user);
 
-        return new LoginResponse(token, user.getName(), user.getEmail(), user.getRole().name());
+        return new LoginResponse(token, user.getName(), user.getPhone(), user.getRole().name());
     }
 
     @Transactional
-    public void inviteUser(InviteRequest request, User currentUser) {
-        if (userRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("A user with this email already exists.");
+    public String inviteUser(InviteRequest request, User currentUser) {
+        if (userRepository.existsByPhone(request.phone())) {
+            throw new RuntimeException("A user with this phone number already exists.");
         }
 
-        inviteRepository.findByEmail(request.email()).ifPresent(existing -> {
+        inviteRepository.findByPhone(request.phone()).ifPresent(existing -> {
             if (existing.getStatus() == InviteStatus.PENDING && existing.getExpiresAt().isAfter(LocalDateTime.now())) {
-                throw new RuntimeException("An active invite already exists for this email.");
+                throw new RuntimeException("An active invite already exists for this phone number.");
             }
             inviteRepository.delete(existing);
         });
 
         String token = UUID.randomUUID().toString();
+        String inviteLink = frontendUrl + "/accept-invite?token=" + token;
 
         Invite invite = Invite.builder()
-                .email(request.email())
+                .phone(request.phone())
                 .role(request.role())
                 .token(token)
                 .status(InviteStatus.PENDING)
@@ -72,8 +70,7 @@ public class AuthService {
                 .build();
 
         inviteRepository.save(invite);
-
-        sendInviteEmail(request.email(), request.name(), token);
+        return inviteLink;
     }
 
     @Transactional
@@ -91,13 +88,9 @@ public class AuthService {
             throw new RuntimeException("This invite has expired.");
         }
 
-        if (userRepository.existsByEmail(invite.getEmail())) {
-            throw new RuntimeException("A user with this email already exists.");
-        }
-
         User user = User.builder()
                 .name(request.name())
-                .email(invite.getEmail())
+                .phone(invite.getPhone())
                 .passwordHash(passwordEncoder.encode(request.password()))
                 .role(invite.getRole())
                 .active(true)
@@ -109,40 +102,17 @@ public class AuthService {
         inviteRepository.save(invite);
     }
 
-    public Map<String, Object> getCurrentUser(String email) {
-        User user = userRepository.findByEmail(email)
+    public Map<String, Object> getCurrentUser(String phone) {
+        User user = userRepository.findByPhone(phone)
                 .orElseThrow(() -> new RuntimeException("User not found."));
 
         return Map.of(
                 "id", user.getId(),
                 "name", user.getName(),
-                "email", user.getEmail(),
+                "phone", user.getPhone(),
                 "role", user.getRole().name(),
                 "active", user.isActive()
         );
     }
 
-    private void sendInviteEmail(String toEmail, String name, String token) {
-        try {
-            String inviteLink = frontendUrl + "/accept-invite?token=" + token;
-
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(toEmail);
-            message.setSubject("You have been invited to Fransgiddy Montessori");
-            message.setText(
-                    "Hello " + name + ",\n\n" +
-                    "You have been invited to join the Fransgiddy Montessori School Management System.\n\n" +
-                    "Please click the link below to complete your registration:\n" +
-                    inviteLink + "\n\n" +
-                    "This link will expire in 48 hours.\n\n" +
-                    "If you did not expect this invitation, please ignore this email.\n\n" +
-                    "Best regards,\n" +
-                    "Fransgiddy Montessori Team"
-            );
-
-            mailSender.send(message);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to send invite email: " + e.getMessage());
-        }
-    }
 }

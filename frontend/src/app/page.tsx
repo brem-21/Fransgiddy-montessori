@@ -51,7 +51,7 @@ export default function LandingPage() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Welcome to{" "}
               <span className="text-indigo-200">Fransgiddy</span>{" "}
-              Montessori
+              Royal School
             </h1>
             <p className="text-xl text-indigo-100 mb-8 max-w-2xl leading-relaxed">
               Nurturing curious minds through child-centred Montessori education.
@@ -90,7 +90,7 @@ export default function LandingPage() {
               Our Montessori Philosophy
             </h2>
             <p className="text-gray-600 mb-4 leading-relaxed">
-              At Fransgiddy Montessori, we believe every child is a natural learner.
+              At Fransgiddy Royal School, we believe every child is a natural learner.
               Our classrooms are carefully prepared environments where children are
               empowered to direct their own learning at their own pace.
             </p>
@@ -193,31 +193,46 @@ export default function LandingPage() {
           </div>
         ) : (
           <div className="grid sm:grid-cols-3 gap-6">
-            {announcements.map((a) => (
-              <Card key={a.id} className="hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="secondary" className="text-xs uppercase">
-                      {a.type}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-base">{a.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-500 text-sm line-clamp-3 mb-3">
-                    {a.content}
-                  </p>
-                  <div className="flex items-center gap-1 text-xs text-gray-400">
-                    <Calendar className="h-3 w-3" />
-                    {new Date(a.createdAt).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {announcements.map((a) => {
+              const imageUrl = a.mediaUrls?.find((u) =>
+                /\.(jpe?g|png|gif|webp|svg)$/i.test(u)
+              );
+              return (
+                <Card key={a.id} className="hover:shadow-md transition-shadow overflow-hidden">
+                  {imageUrl && (
+                    <div className="h-44 overflow-hidden bg-gray-100">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${imageUrl}`}
+                        alt={a.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <CardHeader>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge variant="secondary" className="text-xs uppercase">
+                        {a.type}
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-base">{a.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-500 text-sm line-clamp-3 mb-3">
+                      {a.content}
+                    </p>
+                    <div className="flex items-center gap-1 text-xs text-gray-400">
+                      <Calendar className="h-3 w-3" />
+                      {new Date(a.createdAt).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </section>
@@ -254,7 +269,7 @@ export default function LandingPage() {
               <div className="flex items-center gap-2 mb-3">
                 <GraduationCap className="h-6 w-6 text-indigo-400" />
                 <span className="font-bold text-white">
-                  Fransgiddy Montessori
+                  Fransgiddy Royal School
                 </span>
               </div>
               <p className="text-sm leading-relaxed text-gray-400">
@@ -292,7 +307,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Fransgiddy Montessori. All rights reserved.
+            &copy; {new Date().getFullYear()} Fransgiddy Royal School. All rights reserved.
           </div>
         </div>
       </footer>

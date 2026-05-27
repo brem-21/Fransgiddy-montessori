@@ -25,16 +25,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { userApi, authApi } from "@/lib/api";
+import { userApi } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import type { User } from "@/types";
 
-const inviteSchema = z.object({
+const createSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  email: z.string().email("Valid email required"),
+  phone: z.string().min(7, "Valid phone number required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-type InviteFormData = z.infer<typeof inviteSchema>;
+type CreateFormData = z.infer<typeof createSchema>;
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -49,7 +50,7 @@ export default function AdminUsersPage() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<InviteFormData>({ resolver: zodResolver(inviteSchema) });
+  } = useForm<CreateFormData>({ resolver: zodResolver(createSchema) });
 
   const fetchUsers = async () => {
     try {
@@ -66,16 +67,19 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, []);
 
-  const onInvite = async (data: InviteFormData) => {
+  const onCreate = async (data: CreateFormData) => {
     setSubmitting(true);
     try {
-      await authApi.invite(data.email, "TEACHER", data.name);
-      toast({ title: "Invite Sent", description: `Invitation sent to ${data.email}.` });
+      await userApi.createTeacher(data);
+      toast({ title: "Teacher Created", description: `${data.name} can now log in with their phone number.` });
       setDialogOpen(false);
       reset();
       fetchUsers();
-    } catch {
-      toast({ title: "Error", description: "Failed to send invitation.", variant: "destructive" });
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ?? "Failed to create teacher.";
+      toast({ title: "Error", description: message, variant: "destructive" });
     } finally {
       setSubmitting(false);
     }
@@ -121,7 +125,7 @@ export default function AdminUsersPage() {
           </p>
         </div>
         <Button onClick={() => { reset(); setDialogOpen(true); }}>
-          <Plus className="h-4 w-4 mr-1" /> Invite Teacher
+          <Plus className="h-4 w-4 mr-1" /> Add Teacher
         </Button>
       </div>
 
@@ -137,7 +141,7 @@ export default function AdminUsersPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Joined</TableHead>
@@ -148,7 +152,7 @@ export default function AdminUsersPage() {
               {users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell className="text-gray-500 text-sm">{user.email}</TableCell>
+                  <TableCell className="text-gray-500 text-sm">{user.phone}</TableCell>
                   <TableCell>
                     <Badge
                       variant={user.role === "PRINCIPAL" ? "default" : "secondary"}
@@ -165,7 +169,7 @@ export default function AdminUsersPage() {
                     )}
                   </TableCell>
                   <TableCell className="text-sm text-gray-500">
-                    {new Date(user.createdAt).toLocaleDateString("en-GB")}
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB") : "—"}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -173,7 +177,7 @@ export default function AdminUsersPage() {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleToggle(user)}
-                        disabled={togglingId === user.id}
+                        disabled={togglingId === user.id || user.role === "PRINCIPAL"}
                         title={user.active ? "Deactivate" : "Activate"}
                       >
                         {user.active ? (
@@ -187,7 +191,7 @@ export default function AdminUsersPage() {
                         variant="ghost"
                         className="text-red-500 hover:text-red-700"
                         onClick={() => handleDelete(user)}
-                        disabled={deletingId === user.id}
+                        disabled={deletingId === user.id || user.role === "PRINCIPAL"}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -200,34 +204,46 @@ export default function AdminUsersPage() {
         )}
       </Card>
 
-      {/* Invite Dialog */}
+      {/* Create Teacher Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Invite a Teacher</DialogTitle>
+            <DialogTitle>Add New Teacher</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onInvite)} className="space-y-4">
+          <form onSubmit={handleSubmit(onCreate)} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="name">Full Name *</Label>
-              <Input id="name" placeholder="Teacher's name" {...register("name")} />
+              <Input id="name" placeholder="Teacher's full name" {...register("name")} />
               {errors.name && (
                 <p className="text-xs text-red-600">{errors.name.message}</p>
               )}
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="email">Email Address *</Label>
+              <Label htmlFor="phone">Phone Number *</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="teacher@school.com"
-                {...register("email")}
+                id="phone"
+                type="tel"
+                placeholder="e.g. 0241234567"
+                {...register("phone")}
               />
-              {errors.email && (
-                <p className="text-xs text-red-600">{errors.email.message}</p>
+              {errors.phone && (
+                <p className="text-xs text-red-600">{errors.phone.message}</p>
               )}
             </div>
-            <div className="rounded-md bg-indigo-50 p-3 text-sm text-indigo-700">
-              Role: <strong>Teacher</strong> — An invitation email will be sent.
+            <div className="space-y-1.5">
+              <Label htmlFor="password">Initial Password *</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Min. 6 characters"
+                {...register("password")}
+              />
+              {errors.password && (
+                <p className="text-xs text-red-600">{errors.password.message}</p>
+              )}
+            </div>
+            <div className="rounded-md bg-blue-50 p-3 text-sm text-blue-700">
+              Share the phone number and password with the teacher. They can change their password after logging in.
             </div>
             <DialogFooter>
               <Button
@@ -238,7 +254,7 @@ export default function AdminUsersPage() {
                 Cancel
               </Button>
               <Button type="submit" disabled={submitting}>
-                {submitting ? "Sending..." : "Send Invite"}
+                {submitting ? "Creating..." : "Create Teacher"}
               </Button>
             </DialogFooter>
           </form>

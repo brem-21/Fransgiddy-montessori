@@ -4,8 +4,8 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Fransgiddy Montessori",
-  description: "Fransgiddy Montessori School Management System",
+  title: "Fransgiddy Royal School",
+  description: "Fransgiddy Royal School Management System",
 };
 
 export default function RootLayout({

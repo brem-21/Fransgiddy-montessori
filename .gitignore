@@ -19,6 +19,19 @@
 *.tar.gz
 *.rar
 
+# Environment files — never commit real secrets
+.env
+.env.local
+backend/.env
+frontend/.env.local
+backend/backend-env.env
+frontend/frontend-env.env
+
+# Keep example files in git
+!.env.example
+!backend/backend-env.example.env
+!frontend/frontend-env.example.env
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*

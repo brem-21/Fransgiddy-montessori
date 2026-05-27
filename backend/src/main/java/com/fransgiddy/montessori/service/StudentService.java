@@ -3,12 +3,16 @@ package com.fransgiddy.montessori.service;
 import com.fransgiddy.montessori.dto.student.StudentRequest;
 import com.fransgiddy.montessori.dto.student.StudentResponse;
 import com.fransgiddy.montessori.entity.Student;
+import com.fransgiddy.montessori.entity.User;
+import com.fransgiddy.montessori.enums.Role;
+import com.fransgiddy.montessori.repository.SchoolClassRepository;
 import com.fransgiddy.montessori.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,6 +20,7 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final SchoolClassRepository schoolClassRepository;
 
     @Transactional
     public StudentResponse createStudent(StudentRequest request) {
@@ -35,8 +40,19 @@ public class StudentService {
         return toResponse(student);
     }
 
-    public List<StudentResponse> getAllStudents() {
+    public List<StudentResponse> getAllStudents(User requester) {
+        if (requester.getRole() == Role.PRINCIPAL) {
+            return studentRepository.findByActiveTrue().stream()
+                    .map(this::toResponse)
+                    .collect(Collectors.toList());
+        }
+        // TEACHER — only return students from their assigned classes
+        Set<String> myClassNames = schoolClassRepository.findByTeachersId(requester.getId())
+                .stream()
+                .map(c -> c.getName())
+                .collect(Collectors.toSet());
         return studentRepository.findByActiveTrue().stream()
+                .filter(s -> myClassNames.contains(s.getClassName()))
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }

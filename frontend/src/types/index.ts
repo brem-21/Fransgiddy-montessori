@@ -1,7 +1,8 @@
 export interface User {
   id: number;
   name: string;
-  email: string;
+  phone: string;
+  email?: string;
   role: "PRINCIPAL" | "TEACHER";
   active: boolean;
   createdAt: string;
@@ -46,6 +47,7 @@ export interface Announcement {
   published: boolean;
   authorName: string;
   createdAt: string;
+  mediaUrls?: string[];
 }
 
 export interface Registration {
@@ -137,4 +139,47 @@ export interface PrincipalAnalytics {
   topStudents: StudentFeeSummary[];
   dailyTrend: DailyFeeEntry[];
   recentEntries: Fee[];
+}
+
+export interface SchoolClass {
+  id: number;
+  name: string;
+  description?: string;
+  teacherIds: number[];
+  teacherNames: string[];
+  studentCount: number;
+}
+
+export interface StudentRanking {
+  rank: number;
+  studentId: number;
+  studentName: string;
+  scores: Record<string, number>;
+  total: number;
+  average: number;
+  overallGrade: string;
+}
+
+export interface Rankings {
+  subjects: string[];
+  rankings: StudentRanking[];
+}
+
+export interface SmsContact {
+  id: number;
+  name: string;
+  phone: string;
+  type: "PARENT" | "TEACHER";
+}
+
+export interface SmsRequestResponse {
+  id: number;
+  message: string;
+  recipientType: "ALL" | "PARENTS" | "TEACHERS" | "CUSTOM";
+  customPhones: string[];
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  requestedByName: string;
+  reviewedByName: string | null;
+  createdAt: string;
+  reviewedAt: string | null;
 }

@@ -42,6 +42,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("GET", "/api/public/**").permitAll()
+                        .requestMatchers("GET", "/uploads/**").permitAll()
                         .requestMatchers("POST", "/api/auth/login").permitAll()
                         .requestMatchers("POST", "/api/auth/register").permitAll()
                         .requestMatchers("POST", "/api/public/registrations").permitAll()

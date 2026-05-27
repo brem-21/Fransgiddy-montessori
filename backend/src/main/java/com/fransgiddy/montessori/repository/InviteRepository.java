@@ -11,5 +11,5 @@ public interface InviteRepository extends JpaRepository<Invite, Long> {
 
     Optional<Invite> findByToken(String token);
 
-    Optional<Invite> findByEmail(String email);
+    Optional<Invite> findByPhone(String phone);
 }

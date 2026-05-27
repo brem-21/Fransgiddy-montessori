@@ -12,4 +12,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findByActiveTrue();
 
     List<Student> findByClassName(String className);
+
+    long countByClassName(String className);
 }

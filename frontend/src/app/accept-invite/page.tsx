@@ -169,7 +169,7 @@ export default function AcceptInvitePage() {
             </div>
             <CardTitle className="text-2xl">Complete Your Registration</CardTitle>
             <CardDescription>
-              Set up your account to access the Fransgiddy Montessori portal
+              Set up your account to access the Fransgiddy Royal School portal
             </CardDescription>
           </CardHeader>
           <CardContent>

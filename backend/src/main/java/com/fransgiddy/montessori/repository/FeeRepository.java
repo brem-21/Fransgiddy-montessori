@@ -17,6 +17,10 @@ public interface FeeRepository extends JpaRepository<Fee, Long> {
 
     List<Fee> findByCollectedByEmailAndFeeDateBetween(String email, LocalDate start, LocalDate end);
 
+    List<Fee> findByCollectedByPhone(String phone);
+
+    List<Fee> findByCollectedByPhoneAndFeeDateBetween(String phone, LocalDate start, LocalDate end);
+
     List<Fee> findByFeeDateBetween(LocalDate start, LocalDate end);
 
     List<Fee> findByStudentIdAndFeeDateBetween(Long studentId, LocalDate start, LocalDate end);

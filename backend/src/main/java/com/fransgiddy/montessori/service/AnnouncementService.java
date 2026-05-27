@@ -21,9 +21,9 @@ public class AnnouncementService {
     private final UserRepository userRepository;
 
     @Transactional
-    public AnnouncementResponse create(AnnouncementRequest request, String authorEmail) {
-        User author = userRepository.findByEmail(authorEmail)
-                .orElseThrow(() -> new RuntimeException("Author not found with email: " + authorEmail));
+    public AnnouncementResponse create(AnnouncementRequest request, String authorPhone) {
+        User author = userRepository.findByPhone(authorPhone)
+                .orElseThrow(() -> new RuntimeException("Author not found with phone: " + authorPhone));
 
         Announcement announcement = Announcement.builder()
                 .title(request.title())
@@ -81,6 +81,14 @@ public class AnnouncementService {
         announcementRepository.deleteById(id);
     }
 
+    @Transactional
+    public AnnouncementResponse addMedia(Long id, String mediaUrl) {
+        Announcement a = announcementRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Announcement not found"));
+        a.getMediaUrls().add(mediaUrl);
+        return toResponse(announcementRepository.save(a));
+    }
+
     private AnnouncementResponse toResponse(Announcement announcement) {
         return new AnnouncementResponse(
                 announcement.getId(),
@@ -89,7 +97,8 @@ public class AnnouncementService {
                 announcement.getType(),
                 announcement.isPublished(),
                 announcement.getAuthor().getName(),
-                announcement.getCreatedAt()
+                announcement.getCreatedAt(),
+                announcement.getMediaUrls()
         );
     }
 }

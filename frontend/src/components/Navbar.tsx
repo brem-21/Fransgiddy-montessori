@@ -26,7 +26,7 @@ export function Navbar() {
             <GraduationCap className="h-7 w-7 text-indigo-600" />
             <span className="font-bold text-gray-900 text-lg leading-tight">
               Fransgiddy<br className="hidden sm:block" />
-              <span className="text-indigo-600 text-sm font-medium"> Montessori</span>
+              <span className="text-indigo-600 text-sm font-medium"> Royal School</span>
             </span>
           </Link>
 

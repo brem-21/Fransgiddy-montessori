@@ -24,7 +24,7 @@ public class Invite {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String phone;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

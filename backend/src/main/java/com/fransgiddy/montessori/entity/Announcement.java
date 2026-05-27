@@ -10,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -40,6 +42,12 @@ public class Announcement {
     @Builder.Default
     @Column(nullable = false)
     private boolean published = false;
+
+    @Builder.Default
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "announcement_media", joinColumns = @JoinColumn(name = "announcement_id"))
+    @Column(name = "media_url")
+    private List<String> mediaUrls = new ArrayList<>();
 
     @CreationTimestamp
     @Column(updatable = false)

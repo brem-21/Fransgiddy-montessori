@@ -15,8 +15,8 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  login: (phone: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,12 +27,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const logout = useCallback(() => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-    setToken(null);
-    router.push("/login");
+  const logout = useCallback(async () => {
+    try {
+      await authApi.logout();
+    } catch {
+      // ignore — token may already be expired
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setUser(null);
+      setToken(null);
+      router.push("/login");
+    }
   }, [router]);
 
   useEffect(() => {
@@ -62,9 +68,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     init();
   }, [logout]);
 
-  const login = async (email: string, password: string) => {
-    const res = await authApi.login(email, password);
-    const { token: newToken, user: newUser } = res.data.data;
+  const login = async (phone: string, password: string) => {
+    const res = await authApi.login(phone, password);
+    const { token: newToken, name, phone: userPhone, role } = res.data.data as {
+      token: string; name: string; phone: string; role: "PRINCIPAL" | "TEACHER";
+    };
+    const newUser: User = { id: 0, name, phone: userPhone, role, active: true, createdAt: "" };
     localStorage.setItem("token", newToken);
     localStorage.setItem("user", JSON.stringify(newUser));
     setToken(newToken);

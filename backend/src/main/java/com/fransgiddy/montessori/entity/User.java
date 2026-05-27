@@ -30,9 +30,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Column(nullable = false)
     private String passwordHash;
 
@@ -40,6 +37,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false, unique = true)
     private String phone;
 
     @Builder.Default
@@ -62,7 +60,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return phone;
     }
 
     @Override

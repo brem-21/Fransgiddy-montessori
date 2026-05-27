@@ -11,10 +11,13 @@ import type {
   Fee,
   TeacherAnalytics,
   PrincipalAnalytics,
+  SchoolClass,
+  Rankings,
+  SmsRequestResponse,
 } from "@/types";
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -45,9 +48,9 @@ apiClient.interceptors.response.use(
 );
 
 export const authApi = {
-  login: (email: string, password: string) =>
-    apiClient.post<ApiResponse<{ token: string; user: User }>>("/auth/login", {
-      email,
+  login: (phone: string, password: string) =>
+    apiClient.post<ApiResponse<{ token: string; name: string; phone: string; role: string }>>("/auth/login", {
+      phone,
       password,
     }),
 
@@ -61,6 +64,8 @@ export const authApi = {
     ),
 
   me: () => apiClient.get<ApiResponse<User>>("/auth/me"),
+
+  logout: () => apiClient.post<ApiResponse<null>>("/auth/logout"),
 };
 
 export const studentApi = {
@@ -97,34 +102,81 @@ export const resultApi = {
     apiClient.get<ApiResponse<Result[]>>(`/results/student/${id}`),
 
   getReportCard: (studentId: number, term: string, year: string) =>
-    apiClient.get<ApiResponse<ReportCard>>(
-      `/results/report-card/${studentId}?term=${term}&year=${year}`
-    ),
+    apiClient.get<ApiResponse<ReportCard>>("/results/report-card", {
+      params: { studentId, term, academicYear: year },
+    }),
 
   myEntries: () => apiClient.get<ApiResponse<Result[]>>("/results/my-entries"),
+
+  rankings: (className: string, term: string, academicYear: string) =>
+    apiClient.get<ApiResponse<Rankings>>("/results/rankings", {
+      params: { className, term, academicYear },
+    }),
 };
 
 export const announcementApi = {
   getPublic: () =>
     apiClient.get<ApiResponse<Announcement[]>>("/public/announcements"),
 
-  getAll: () => apiClient.get<ApiResponse<Announcement[]>>("/announcements"),
+  getAll: () => apiClient.get<ApiResponse<Announcement[]>>("/admin/announcements"),
 
   create: (data: {
     title: string;
     content: string;
     type: string;
     published: boolean;
-  }) => apiClient.post<ApiResponse<Announcement>>("/announcements", data),
+  }) => apiClient.post<ApiResponse<Announcement>>("/admin/announcements", data),
 
   publish: (id: number) =>
-    apiClient.patch<ApiResponse<Announcement>>(
-      `/announcements/${id}/publish`,
-      {}
-    ),
+    apiClient.patch<ApiResponse<Announcement>>(`/admin/announcements/${id}/publish`, {}),
 
   delete: (id: number) =>
-    apiClient.delete<ApiResponse<null>>(`/announcements/${id}`),
+    apiClient.delete<ApiResponse<null>>(`/admin/announcements/${id}`),
+
+  uploadMedia: (id: number, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return apiClient.post<ApiResponse<{ id: number }>>(`/admin/announcements/${id}/media`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+};
+
+export const smsApi = {
+  send: (data: {
+    message: string;
+    recipientType: "ALL" | "PARENTS" | "TEACHERS" | "CUSTOM";
+    customPhones?: string[];
+  }) => apiClient.post<ApiResponse<{ sent: number; failed: number; details: string }>>("/admin/sms/send", data),
+
+  getRecipientCounts: () =>
+    apiClient.get<ApiResponse<{ parents: number; teachers: number; all: number }>>("/admin/sms/count"),
+
+  getContacts: () =>
+    apiClient.get<ApiResponse<{ id: number; name: string; phone: string; type: "PARENT" | "TEACHER" }[]>>("/admin/sms/contacts"),
+
+  getPendingRequests: () =>
+    apiClient.get<ApiResponse<SmsRequestResponse[]>>("/admin/sms/requests"),
+
+  approveRequest: (id: number) =>
+    apiClient.post<ApiResponse<{ sent: number; failed: number; details: string }>>(`/admin/sms/requests/${id}/approve`, {}),
+
+  rejectRequest: (id: number) =>
+    apiClient.post<ApiResponse<null>>(`/admin/sms/requests/${id}/reject`, {}),
+};
+
+export const teacherSmsApi = {
+  getContacts: () =>
+    apiClient.get<ApiResponse<{ id: number; name: string; phone: string; type: "PARENT" | "TEACHER" }[]>>("/teacher/sms/contacts"),
+
+  createRequest: (data: {
+    message: string;
+    recipientType: "ALL" | "PARENTS" | "TEACHERS" | "CUSTOM";
+    customPhones?: string[];
+  }) => apiClient.post<ApiResponse<SmsRequestResponse>>("/teacher/sms/request", data),
+
+  getMyRequests: () =>
+    apiClient.get<ApiResponse<SmsRequestResponse[]>>("/teacher/sms/my-requests"),
 };
 
 export const registrationApi = {
@@ -137,29 +189,47 @@ export const registrationApi = {
     childDateOfBirth: string;
     desiredClass: string;
     message: string;
-  }) => apiClient.post<ApiResponse<Registration>>("/registrations", data),
+  }) => apiClient.post<ApiResponse<Registration>>("/public/registrations", data),
 
   getAll: () =>
-    apiClient.get<ApiResponse<Registration[]>>("/registrations"),
+    apiClient.get<ApiResponse<Registration[]>>("/admin/registrations"),
 
   updateStatus: (
     id: number,
     status: "PENDING" | "REVIEWED" | "ACCEPTED" | "REJECTED"
   ) =>
-    apiClient.patch<ApiResponse<Registration>>(
-      `/registrations/${id}/status`,
-      { status }
-    ),
+    apiClient.patch<ApiResponse<Registration>>(`/admin/registrations/${id}/status`, { status }),
 };
 
 export const userApi = {
-  getAll: () => apiClient.get<ApiResponse<User[]>>("/users"),
+  getAll: () => apiClient.get<ApiResponse<User[]>>("/admin/users"),
+
+  createTeacher: (data: { name: string; phone: string; password: string }) =>
+    apiClient.post<ApiResponse<User>>("/admin/users", data),
 
   toggleActive: (id: number) =>
-    apiClient.patch<ApiResponse<User>>(`/users/${id}/toggle-active`, {}),
+    apiClient.patch<ApiResponse<User>>(`/admin/users/${id}/toggle`, {}),
 
   delete: (id: number) =>
-    apiClient.delete<ApiResponse<null>>(`/users/${id}`),
+    apiClient.delete<ApiResponse<null>>(`/admin/users/${id}`),
+};
+
+export const classApi = {
+  getAll: () => apiClient.get<ApiResponse<SchoolClass[]>>("/admin/classes"),
+
+  create: (data: { name: string; description?: string }) =>
+    apiClient.post<ApiResponse<SchoolClass>>("/admin/classes", data),
+
+  delete: (id: number) =>
+    apiClient.delete<ApiResponse<null>>(`/admin/classes/${id}`),
+
+  assignTeachers: (id: number, teacherIds: number[]) =>
+    apiClient.put<ApiResponse<SchoolClass>>(`/admin/classes/${id}/teachers`, { teacherIds }),
+
+  assignStudents: (id: number, studentIds: number[]) =>
+    apiClient.put<ApiResponse<SchoolClass>>(`/admin/classes/${id}/students`, { studentIds }),
+
+  myClasses: () => apiClient.get<ApiResponse<SchoolClass[]>>("/admin/classes/my-classes"),
 };
 
 export const feeApi = {
@@ -182,6 +252,7 @@ export const feeApi = {
     endDate?: string;
     teacherId?: number;
     studentId?: number;
+    className?: string;
   }) =>
     apiClient.get<ApiResponse<PrincipalAnalytics>>("/fees/analytics", {
       params,
@@ -189,6 +260,14 @@ export const feeApi = {
 
   byStudent: (studentId: number) =>
     apiClient.get<ApiResponse<Fee[]>>(`/fees/student/${studentId}`),
+};
+
+export const settingsApi = {
+  getAll: () =>
+    apiClient.get<ApiResponse<Record<string, string>>>("/admin/settings"),
+
+  saveAll: (data: Record<string, string>) =>
+    apiClient.put<ApiResponse<Record<string, string>>>("/admin/settings", data),
 };
 
 export default apiClient;

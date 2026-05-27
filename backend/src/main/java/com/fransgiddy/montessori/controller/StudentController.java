@@ -3,12 +3,14 @@ package com.fransgiddy.montessori.controller;
 import com.fransgiddy.montessori.dto.ApiResponse;
 import com.fransgiddy.montessori.dto.student.StudentRequest;
 import com.fransgiddy.montessori.dto.student.StudentResponse;
+import com.fransgiddy.montessori.entity.User;
 import com.fransgiddy.montessori.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +32,9 @@ public class StudentController {
 
     @GetMapping
     @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
-    public ResponseEntity<ApiResponse<List<StudentResponse>>> getAllStudents() {
-        List<StudentResponse> students = studentService.getAllStudents();
+    public ResponseEntity<ApiResponse<List<StudentResponse>>> getAllStudents(
+            @AuthenticationPrincipal User currentUser) {
+        List<StudentResponse> students = studentService.getAllStudents(currentUser);
         return ResponseEntity.ok(ApiResponse.of("Students retrieved successfully", students));
     }
 

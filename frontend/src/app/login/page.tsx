@@ -21,7 +21,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Enter a valid phone number").max(15),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -44,7 +44,7 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
+      await login(data.phone, data.password);
       // Re-read user from localStorage to determine role
       const userStr = localStorage.getItem("user");
       if (userStr) {
@@ -58,7 +58,7 @@ export default function LoginPage() {
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? "Invalid email or password. Please try again.";
+          ?.message ?? "Invalid phone number or password. Please try again.";
       toast({
         title: "Login Failed",
         description: message,
@@ -89,7 +89,7 @@ export default function LoginPage() {
                 <GraduationCap className="h-8 w-8 text-indigo-600" />
               </div>
             </div>
-            <CardTitle className="text-2xl">Fransgiddy Montessori</CardTitle>
+            <CardTitle className="text-2xl">Fransgiddy Royal School</CardTitle>
             <CardDescription>
               Sign in to your account to continue
             </CardDescription>
@@ -98,16 +98,16 @@ export default function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="phone">Phone Number</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  {...register("email")}
+                  id="phone"
+                  type="tel"
+                  placeholder="0244 123 456"
+                  autoComplete="tel"
+                  {...register("phone")}
                 />
-                {errors.email && (
-                  <p className="text-xs text-red-600">{errors.email.message}</p>
+                {errors.phone && (
+                  <p className="text-xs text-red-600">{errors.phone.message}</p>
                 )}
               </div>
 

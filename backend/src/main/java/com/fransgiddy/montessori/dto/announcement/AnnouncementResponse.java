@@ -3,6 +3,7 @@ package com.fransgiddy.montessori.dto.announcement;
 import com.fransgiddy.montessori.enums.AnnouncementType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record AnnouncementResponse(
         Long id,
@@ -11,5 +12,6 @@ public record AnnouncementResponse(
         AnnouncementType type,
         boolean published,
         String authorName,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        List<String> mediaUrls
 ) {}
