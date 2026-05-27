@@ -49,7 +49,7 @@ export default function LoginPage() {
       const userStr = localStorage.getItem("user");
       if (userStr) {
         const user = JSON.parse(userStr);
-        if (user.role === "SUPER_ADMIN") {
+        if (user.role === "PRINCIPAL") {
           router.push("/admin/dashboard");
         } else {
           router.push("/teacher/dashboard");

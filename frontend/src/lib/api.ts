@@ -8,6 +8,9 @@ import type {
   Announcement,
   Registration,
   ReportCard,
+  Fee,
+  TeacherAnalytics,
+  PrincipalAnalytics,
 } from "@/types";
 
 const apiClient = axios.create({
@@ -157,6 +160,35 @@ export const userApi = {
 
   delete: (id: number) =>
     apiClient.delete<ApiResponse<null>>(`/users/${id}`),
+};
+
+export const feeApi = {
+  enter: (data: {
+    studentId: number;
+    amount: number;
+    description?: string;
+    feeDate?: string;
+  }) => apiClient.post<ApiResponse<Fee>>("/fees", data),
+
+  myFees: () => apiClient.get<ApiResponse<Fee[]>>("/fees/my-fees"),
+
+  myAnalytics: (params?: { startDate?: string; endDate?: string }) =>
+    apiClient.get<ApiResponse<TeacherAnalytics>>("/fees/my-analytics", {
+      params,
+    }),
+
+  principalAnalytics: (params?: {
+    startDate?: string;
+    endDate?: string;
+    teacherId?: number;
+    studentId?: number;
+  }) =>
+    apiClient.get<ApiResponse<PrincipalAnalytics>>("/fees/analytics", {
+      params,
+    }),
+
+  byStudent: (studentId: number) =>
+    apiClient.get<ApiResponse<Fee[]>>(`/fees/student/${studentId}`),
 };
 
 export default apiClient;

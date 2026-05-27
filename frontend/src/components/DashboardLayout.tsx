@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  role: "SUPER_ADMIN" | "TEACHER";
+  role: "PRINCIPAL" | "TEACHER";
 }
 
 export function DashboardLayout({ children, role }: DashboardLayoutProps) {
@@ -35,7 +35,7 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
   if (!user) return null;
 
   const roleLabel =
-    role === "SUPER_ADMIN" ? "Super Admin" : "Teacher";
+    role === "PRINCIPAL" ? "Principal" : "Teacher";
 
   return (
     <div className="flex min-h-screen bg-gray-50">

@@ -17,7 +17,7 @@ export default function TeacherLayout({
     if (!loading) {
       if (!user) {
         router.push("/login");
-      } else if (user.role !== "TEACHER" && user.role !== "SUPER_ADMIN") {
+      } else if (user.role !== "TEACHER" && user.role !== "PRINCIPAL") {
         router.push("/login");
       }
     }
@@ -31,7 +31,7 @@ export default function TeacherLayout({
     );
   }
 
-  if (!user || (user.role !== "TEACHER" && user.role !== "SUPER_ADMIN"))
+  if (!user || (user.role !== "TEACHER" && user.role !== "PRINCIPAL"))
     return null;
 
   return <DashboardLayout role="TEACHER">{children}</DashboardLayout>;

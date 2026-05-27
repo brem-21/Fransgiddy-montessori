@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/invite")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<Void>> inviteUser(
             @Valid @RequestBody InviteRequest request,
             @AuthenticationPrincipal User currentUser) {

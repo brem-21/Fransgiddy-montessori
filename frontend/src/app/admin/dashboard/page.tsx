@@ -103,7 +103,7 @@ export default function AdminDashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Super Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Principal Dashboard</h1>
         <p className="text-gray-500 text-sm mt-1">
           Welcome back, {user?.name}. Here&apos;s an overview.
         </p>

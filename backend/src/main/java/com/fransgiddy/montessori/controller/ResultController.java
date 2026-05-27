@@ -23,7 +23,7 @@ public class ResultController {
     private final ResultService resultService;
 
     @PostMapping
-    @PreAuthorize("hasRole('TEACHER') or hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<ResultResponse>> enterResult(
             @Valid @RequestBody ResultRequest request,
             @AuthenticationPrincipal User currentUser) {
@@ -33,14 +33,14 @@ public class ResultController {
     }
 
     @GetMapping("/student/{studentId}")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<List<ResultResponse>>> getStudentResults(@PathVariable Long studentId) {
         List<ResultResponse> results = resultService.getStudentResults(studentId);
         return ResponseEntity.ok(ApiResponse.of("Results retrieved successfully", results));
     }
 
     @GetMapping("/report-card")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<List<ResultResponse>>> getStudentReportCard(
             @RequestParam Long studentId,
             @RequestParam String term,

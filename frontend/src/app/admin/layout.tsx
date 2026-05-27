@@ -17,7 +17,7 @@ export default function AdminLayout({
     if (!loading) {
       if (!user) {
         router.push("/login");
-      } else if (user.role !== "SUPER_ADMIN") {
+      } else if (user.role !== "PRINCIPAL") {
         router.push("/login");
       }
     }
@@ -31,7 +31,7 @@ export default function AdminLayout({
     );
   }
 
-  if (!user || user.role !== "SUPER_ADMIN") return null;
+  if (!user || user.role !== "PRINCIPAL") return null;
 
-  return <DashboardLayout role="SUPER_ADMIN">{children}</DashboardLayout>;
+  return <DashboardLayout role="PRINCIPAL">{children}</DashboardLayout>;
 }

@@ -29,14 +29,14 @@ public class RegistrationController {
     }
 
     @GetMapping("/api/admin/registrations")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<List<Registration>>> getAllRegistrations() {
         List<Registration> registrations = registrationService.getAll();
         return ResponseEntity.ok(ApiResponse.of("Registrations retrieved successfully", registrations));
     }
 
     @PatchMapping("/api/admin/registrations/{id}/status")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<Registration>> updateRegistrationStatus(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {

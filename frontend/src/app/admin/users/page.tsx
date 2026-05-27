@@ -151,10 +151,10 @@ export default function AdminUsersPage() {
                   <TableCell className="text-gray-500 text-sm">{user.email}</TableCell>
                   <TableCell>
                     <Badge
-                      variant={user.role === "SUPER_ADMIN" ? "default" : "secondary"}
+                      variant={user.role === "PRINCIPAL" ? "default" : "secondary"}
                       className="text-xs"
                     >
-                      {user.role === "SUPER_ADMIN" ? "Super Admin" : "Teacher"}
+                      {user.role === "PRINCIPAL" ? "Principal" : "Teacher"}
                     </Badge>
                   </TableCell>
                   <TableCell>

@@ -28,14 +28,14 @@ public class AnnouncementController {
     }
 
     @GetMapping("/api/admin/announcements")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<List<AnnouncementResponse>>> getAllAnnouncements() {
         List<AnnouncementResponse> announcements = announcementService.getAll();
         return ResponseEntity.ok(ApiResponse.of("Announcements retrieved successfully", announcements));
     }
 
     @PostMapping("/api/admin/announcements")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<AnnouncementResponse>> createAnnouncement(
             @Valid @RequestBody AnnouncementRequest request,
             @AuthenticationPrincipal User currentUser) {
@@ -45,7 +45,7 @@ public class AnnouncementController {
     }
 
     @PutMapping("/api/admin/announcements/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<AnnouncementResponse>> updateAnnouncement(
             @PathVariable Long id,
             @Valid @RequestBody AnnouncementRequest request) {
@@ -54,14 +54,14 @@ public class AnnouncementController {
     }
 
     @PatchMapping("/api/admin/announcements/{id}/publish")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<AnnouncementResponse>> publishAnnouncement(@PathVariable Long id) {
         AnnouncementResponse announcement = announcementService.publish(id);
         return ResponseEntity.ok(ApiResponse.of("Announcement published successfully", announcement));
     }
 
     @DeleteMapping("/api/admin/announcements/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<Void>> deleteAnnouncement(@PathVariable Long id) {
         announcementService.delete(id);
         return ResponseEntity.ok(ApiResponse.of("Announcement deleted successfully", null));

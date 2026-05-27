@@ -13,6 +13,8 @@ import {
   GraduationCap,
   LogOut,
   BarChart2,
+  TrendingUp,
+  DollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -49,6 +51,11 @@ const adminLinks: NavItem[] = [
     href: "/admin/registrations",
     icon: <ClipboardList className="h-4 w-4" />,
   },
+  {
+    label: "Fees Analytics",
+    href: "/admin/analytics",
+    icon: <TrendingUp className="h-4 w-4" />,
+  },
 ];
 
 const teacherLinks: NavItem[] = [
@@ -67,16 +74,26 @@ const teacherLinks: NavItem[] = [
     href: "/teacher/report-card",
     icon: <BookOpen className="h-4 w-4" />,
   },
+  {
+    label: "Enter Fees",
+    href: "/teacher/fees",
+    icon: <DollarSign className="h-4 w-4" />,
+  },
+  {
+    label: "My Analytics",
+    href: "/teacher/analytics",
+    icon: <BarChart2 className="h-4 w-4" />,
+  },
 ];
 
 interface SidebarProps {
-  role: "SUPER_ADMIN" | "TEACHER";
+  role: "PRINCIPAL" | "TEACHER";
 }
 
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
   const { logout } = useAuth();
-  const links = role === "SUPER_ADMIN" ? adminLinks : teacherLinks;
+  const links = role === "PRINCIPAL" ? adminLinks : teacherLinks;
 
   return (
     <aside className="flex flex-col w-64 bg-indigo-900 text-white min-h-screen">

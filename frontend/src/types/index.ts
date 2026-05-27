@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: "SUPER_ADMIN" | "TEACHER";
+  role: "PRINCIPAL" | "TEACHER";
   active: boolean;
   createdAt: string;
 }
@@ -84,4 +84,57 @@ export interface ReportCard {
   totalScore: number;
   average: number;
   overallGrade: string;
+}
+
+export interface Fee {
+  id: number;
+  studentName: string;
+  studentClass: string;
+  collectedByName: string;
+  amount: number;
+  description?: string;
+  feeDate: string;
+  createdAt: string;
+}
+
+export interface StudentFeeSummary {
+  studentId: number;
+  studentName: string;
+  className: string;
+  totalAmount: number;
+  count: number;
+}
+
+export interface TeacherFeeSummary {
+  teacherId: number;
+  teacherName: string;
+  totalAmount: number;
+  count: number;
+}
+
+export interface DailyFeeEntry {
+  date: string;
+  totalAmount: number;
+  count: number;
+}
+
+export interface TeacherAnalytics {
+  totalAmount: number;
+  feeCount: number;
+  todayAmount: number;
+  todayCount: number;
+  topStudents: StudentFeeSummary[];
+  dailyTrend: DailyFeeEntry[];
+  recentEntries: Fee[];
+}
+
+export interface PrincipalAnalytics {
+  totalAmount: number;
+  feeCount: number;
+  todayAmount: number;
+  todayCount: number;
+  byTeacher: TeacherFeeSummary[];
+  topStudents: StudentFeeSummary[];
+  dailyTrend: DailyFeeEntry[];
+  recentEntries: Fee[];
 }

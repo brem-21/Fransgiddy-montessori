@@ -21,7 +21,7 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<StudentResponse>> createStudent(@Valid @RequestBody StudentRequest request) {
         StudentResponse student = studentService.createStudent(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -29,21 +29,21 @@ public class StudentController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<List<StudentResponse>>> getAllStudents() {
         List<StudentResponse> students = studentService.getAllStudents();
         return ResponseEntity.ok(ApiResponse.of("Students retrieved successfully", students));
     }
 
     @GetMapping("/class/{className}")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<List<StudentResponse>>> getStudentsByClass(@PathVariable String className) {
         List<StudentResponse> students = studentService.getStudentsByClass(className);
         return ResponseEntity.ok(ApiResponse.of("Students retrieved successfully", students));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<StudentResponse>> updateStudent(
             @PathVariable Long id,
             @Valid @RequestBody StudentRequest request) {
@@ -52,7 +52,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<Void>> deactivateStudent(@PathVariable Long id) {
         studentService.deactivateStudent(id);
         return ResponseEntity.ok(ApiResponse.of("Student deactivated successfully", null));

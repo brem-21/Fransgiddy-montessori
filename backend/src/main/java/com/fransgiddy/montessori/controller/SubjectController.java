@@ -21,7 +21,7 @@ public class SubjectController {
     private final SubjectService subjectService;
 
     @PostMapping
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<Subject>> createSubject(@Valid @RequestBody SubjectRequest request) {
         Subject subject = subjectService.createSubject(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -29,28 +29,28 @@ public class SubjectController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<List<Subject>>> getAllSubjects() {
         List<Subject> subjects = subjectService.getAllSubjects();
         return ResponseEntity.ok(ApiResponse.of("Subjects retrieved successfully", subjects));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<Subject>> getSubjectById(@PathVariable Long id) {
         Subject subject = subjectService.getSubjectById(id);
         return ResponseEntity.ok(ApiResponse.of("Subject retrieved successfully", subject));
     }
 
     @GetMapping("/class/{classLevel}")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<List<Subject>>> getSubjectsByClassLevel(@PathVariable String classLevel) {
         List<Subject> subjects = subjectService.getSubjectsByClassLevel(classLevel);
         return ResponseEntity.ok(ApiResponse.of("Subjects retrieved successfully", subjects));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<Subject>> updateSubject(
             @PathVariable Long id,
             @Valid @RequestBody SubjectRequest request) {
@@ -59,7 +59,7 @@ public class SubjectController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('PRINCIPAL')")
     public ResponseEntity<ApiResponse<Void>> deleteSubject(@PathVariable Long id) {
         subjectService.deleteSubject(id);
         return ResponseEntity.ok(ApiResponse.of("Subject deleted successfully", null));
