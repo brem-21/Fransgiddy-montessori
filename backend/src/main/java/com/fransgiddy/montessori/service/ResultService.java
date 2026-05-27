@@ -4,6 +4,7 @@ import com.fransgiddy.montessori.dto.result.RankingsResponse;
 import com.fransgiddy.montessori.dto.result.ReportCardResponse;
 import com.fransgiddy.montessori.dto.result.ResultRequest;
 import com.fransgiddy.montessori.dto.result.ResultResponse;
+import com.fransgiddy.montessori.dto.result.TranscriptResponse;
 import com.fransgiddy.montessori.entity.Result;
 import com.fransgiddy.montessori.entity.Student;
 import com.fransgiddy.montessori.entity.Subject;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +128,65 @@ public class ResultService {
                 overallGrade,
                 position,
                 totalStudents
+        );
+    }
+
+    public TranscriptResponse getStudentTranscript(Long studentId) {
+        List<Result> allResults = resultRepository.findByStudentId(studentId);
+        if (allResults.isEmpty()) throw new RuntimeException("No results found for this student.");
+
+        Student student = allResults.get(0).getStudent();
+
+        // Group by academicYear then by term
+        Map<String, Map<Term, List<Result>>> grouped = allResults.stream()
+                .collect(Collectors.groupingBy(
+                        Result::getAcademicYear,
+                        Collectors.groupingBy(Result::getTerm)
+                ));
+
+        List<TranscriptResponse.TermRecord> termRecords = new ArrayList<>();
+        grouped.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(yearEntry -> {
+                    String year = yearEntry.getKey();
+                    yearEntry.getValue().entrySet().stream()
+                            .sorted(Comparator.comparingInt(e -> e.getKey().ordinal()))
+                            .forEach(termEntry -> {
+                                Term term = termEntry.getKey();
+                                List<Result> termResults = termEntry.getValue();
+
+                                List<TranscriptResponse.SubjectEntry> subjects = termResults.stream()
+                                        .map(r -> new TranscriptResponse.SubjectEntry(
+                                                r.getSubject().getName(), r.getScore(), r.getGrade(), r.getRemarks()))
+                                        .sorted(Comparator.comparing(TranscriptResponse.SubjectEntry::subjectName))
+                                        .collect(Collectors.toList());
+
+                                double total = termResults.stream().mapToDouble(Result::getScore).sum();
+                                double average = total / termResults.size();
+                                String grade = average >= 80 ? "A" : average >= 70 ? "B" : average >= 60 ? "C" : average >= 50 ? "D" : "F";
+
+                                // Position in class for this term
+                                List<Result> classResults = resultRepository.findByClassNameAndTermAndAcademicYear(student.getClassName(), term, year);
+                                Map<Long, Double> studentTotals = classResults.stream()
+                                        .collect(Collectors.groupingBy(r -> r.getStudent().getId(), Collectors.summingDouble(Result::getScore)));
+                                int totalStudents = studentTotals.size();
+                                int position = (int) studentTotals.entrySet().stream()
+                                        .filter(e -> e.getValue() > total)
+                                        .count() + 1;
+
+                                termRecords.add(new TranscriptResponse.TermRecord(
+                                        year, term.name(), subjects, total, average, grade, position, totalStudents));
+                            });
+                });
+
+        return new TranscriptResponse(
+                student.getId(),
+                student.getFirstName() + " " + student.getLastName(),
+                student.getClassName(),
+                student.getParentName(),
+                student.getParentPhone(),
+                student.getEnrollmentDate().toString(),
+                termRecords
         );
     }
 

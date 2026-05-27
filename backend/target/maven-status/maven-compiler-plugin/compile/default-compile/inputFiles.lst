@@ -75,6 +75,7 @@
 /home/brempong-appiah-dankwah/fransgiddy/Fransgiddy-montessori/backend/src/main/java/com/fransgiddy/montessori/entity/Subject.java
 /home/brempong-appiah-dankwah/fransgiddy/Fransgiddy-montessori/backend/src/main/java/com/fransgiddy/montessori/service/FileStorageService.java
 /home/brempong-appiah-dankwah/fransgiddy/Fransgiddy-montessori/backend/src/main/java/com/fransgiddy/montessori/dto/schoolclass/AssignTeachersRequest.java
+/home/brempong-appiah-dankwah/fransgiddy/Fransgiddy-montessori/backend/src/main/java/com/fransgiddy/montessori/dto/result/TranscriptResponse.java
 /home/brempong-appiah-dankwah/fransgiddy/Fransgiddy-montessori/backend/src/main/java/com/fransgiddy/montessori/repository/RegistrationRepository.java
 /home/brempong-appiah-dankwah/fransgiddy/Fransgiddy-montessori/backend/src/main/java/com/fransgiddy/montessori/controller/ResultController.java
 /home/brempong-appiah-dankwah/fransgiddy/Fransgiddy-montessori/backend/src/main/java/com/fransgiddy/montessori/repository/FeeRepository.java

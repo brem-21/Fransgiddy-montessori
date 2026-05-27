@@ -8,6 +8,7 @@ import type {
   Announcement,
   Registration,
   ReportCard,
+  Transcript,
   Fee,
   TeacherAnalytics,
   PrincipalAnalytics,
@@ -114,6 +115,11 @@ export const resultApi = {
   rankings: (className: string, term: string, academicYear: string) =>
     apiClient.get<ApiResponse<Rankings>>("/results/rankings", {
       params: { className, term, academicYear },
+    }),
+
+  getTranscript: (studentId: number) =>
+    apiClient.get<ApiResponse<Transcript>>("/results/transcript", {
+      params: { studentId },
     }),
 };
 

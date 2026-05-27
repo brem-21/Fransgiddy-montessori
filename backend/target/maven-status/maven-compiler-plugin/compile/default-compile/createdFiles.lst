@@ -54,7 +54,6 @@ com/fransgiddy/montessori/dto/auth/CompleteRegistrationRequest.class
 com/fransgiddy/montessori/dto/announcement/AnnouncementResponse.class
 com/fransgiddy/montessori/dto/auth/LoginRequest.class
 com/fransgiddy/montessori/repository/RegistrationRepository.class
-com/fransgiddy/montessori/service/ResultService.class
 com/fransgiddy/montessori/entity/Registration$RegistrationBuilder.class
 com/fransgiddy/montessori/dto/student/StudentResponse.class
 com/fransgiddy/montessori/entity/Invite$InviteBuilder.class
@@ -94,7 +93,6 @@ com/fransgiddy/montessori/dto/fee/TeacherAnalyticsResponse.class
 com/fransgiddy/montessori/entity/SchoolSettings.class
 com/fransgiddy/montessori/service/FeeService.class
 com/fransgiddy/montessori/dto/auth/InviteRequest.class
-com/fransgiddy/montessori/controller/ResultController.class
 com/fransgiddy/montessori/entity/Student.class
 com/fransgiddy/montessori/dto/sms/SmsRequestResponse.class
 com/fransgiddy/montessori/dto/fee/FeeResponse.class

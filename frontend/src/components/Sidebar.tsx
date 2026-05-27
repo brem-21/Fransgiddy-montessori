@@ -21,6 +21,7 @@ import {
   Wallet,
   MessageSquare,
   Settings,
+  Scroll,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -41,6 +42,7 @@ const adminLinks: NavItem[] = [
   { label: "Registrations", href: "/admin/registrations", icon: <ClipboardList className="h-4 w-4" /> },
   { label: "Enter Results", href: "/admin/results", icon: <ClipboardCheck className="h-4 w-4" /> },
   { label: "Report Card", href: "/admin/report-card", icon: <BookOpen className="h-4 w-4" /> },
+  { label: "Transcript", href: "/admin/transcript", icon: <Scroll className="h-4 w-4" /> },
   { label: "Enter Fees", href: "/admin/fees", icon: <Wallet className="h-4 w-4" /> },
   { label: "Fee Analytics", href: "/admin/analytics", icon: <TrendingUp className="h-4 w-4" /> },
   { label: "My Collections", href: "/admin/my-analytics", icon: <DollarSign className="h-4 w-4" /> },

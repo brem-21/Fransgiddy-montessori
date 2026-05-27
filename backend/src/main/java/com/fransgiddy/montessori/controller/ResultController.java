@@ -5,6 +5,7 @@ import com.fransgiddy.montessori.dto.result.RankingsResponse;
 import com.fransgiddy.montessori.dto.result.ReportCardResponse;
 import com.fransgiddy.montessori.dto.result.ResultRequest;
 import com.fransgiddy.montessori.dto.result.ResultResponse;
+import com.fransgiddy.montessori.dto.result.TranscriptResponse;
 import com.fransgiddy.montessori.entity.User;
 import com.fransgiddy.montessori.enums.Role;
 import com.fransgiddy.montessori.repository.SchoolClassRepository;
@@ -60,6 +61,14 @@ public class ResultController {
     public ResponseEntity<ApiResponse<List<ResultResponse>>> getMyEntries(@AuthenticationPrincipal User currentUser) {
         List<ResultResponse> results = resultService.getTeacherResults(currentUser.getPhone());
         return ResponseEntity.ok(ApiResponse.of("Results retrieved successfully", results));
+    }
+
+    @GetMapping("/transcript")
+    @PreAuthorize("hasRole('PRINCIPAL')")
+    public ResponseEntity<ApiResponse<TranscriptResponse>> getTranscript(
+            @RequestParam Long studentId) {
+        TranscriptResponse transcript = resultService.getStudentTranscript(studentId);
+        return ResponseEntity.ok(ApiResponse.of("Transcript retrieved successfully", transcript));
     }
 
     @GetMapping("/rankings")

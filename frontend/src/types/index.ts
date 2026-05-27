@@ -164,6 +164,34 @@ export interface Rankings {
   rankings: StudentRanking[];
 }
 
+export interface TranscriptSubject {
+  subjectName: string;
+  score: number;
+  grade: string;
+  remarks: string;
+}
+
+export interface TranscriptTerm {
+  academicYear: string;
+  term: string;
+  subjects: TranscriptSubject[];
+  totalScore: number;
+  average: number;
+  overallGrade: string;
+  position: number;
+  totalStudents: number;
+}
+
+export interface Transcript {
+  studentId: number;
+  studentName: string;
+  className: string;
+  parentName: string;
+  parentPhone: string;
+  enrollmentDate: string;
+  terms: TranscriptTerm[];
+}
+
 export interface SmsContact {
   id: number;
   name: string;
