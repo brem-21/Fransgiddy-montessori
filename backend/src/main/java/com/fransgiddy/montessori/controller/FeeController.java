@@ -31,9 +31,21 @@ public class FeeController {
     public ResponseEntity<ApiResponse<FeeResponse>> enterFee(
             @Valid @RequestBody FeeRequest request,
             @AuthenticationPrincipal User currentUser) {
-        FeeResponse response = feeService.enterFee(request, currentUser.getPhone());
+        FeeResponse response = feeService.enterFee(request, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of("Fee recorded successfully", response));
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('PRINCIPAL')")
+    public ResponseEntity<ApiResponse<List<FeeResponse>>> getAllFees(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) Long teacherId,
+            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String className) {
+        List<FeeResponse> fees = feeService.getAllFees(startDate, endDate, teacherId, studentId, className);
+        return ResponseEntity.ok(ApiResponse.of("Fees retrieved successfully", fees));
     }
 
     @GetMapping("/my-fees")

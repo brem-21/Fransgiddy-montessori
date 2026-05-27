@@ -16,7 +16,6 @@ import { toast } from "@/hooks/use-toast";
 
 const schema = z.object({
   parentName: z.string().min(2, "Parent name is required"),
-  parentEmail: z.string().email("Please enter a valid email"),
   parentPhone: z.string().min(7, "Phone number is required"),
   childFirstName: z.string().min(1, "Child's first name is required"),
   childLastName: z.string().min(1, "Child's last name is required"),
@@ -42,7 +41,6 @@ export default function RegisterPage() {
     try {
       await registrationApi.submit({
         parentName: data.parentName,
-        parentEmail: data.parentEmail,
         parentPhone: data.parentPhone,
         childFirstName: data.childFirstName,
         childLastName: data.childLastName,
@@ -123,35 +121,19 @@ export default function RegisterPage() {
                         )}
                       </div>
 
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <Label htmlFor="parentEmail">Email Address *</Label>
-                          <Input
-                            id="parentEmail"
-                            type="email"
-                            placeholder="parent@example.com"
-                            {...register("parentEmail")}
-                          />
-                          {errors.parentEmail && (
-                            <p className="text-xs text-red-600">
-                              {errors.parentEmail.message}
-                            </p>
-                          )}
-                        </div>
-                        <div className="space-y-1.5">
-                          <Label htmlFor="parentPhone">Phone Number *</Label>
-                          <Input
-                            id="parentPhone"
-                            type="tel"
-                            placeholder="+233 20 000 0000"
-                            {...register("parentPhone")}
-                          />
-                          {errors.parentPhone && (
-                            <p className="text-xs text-red-600">
-                              {errors.parentPhone.message}
-                            </p>
-                          )}
-                        </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="parentPhone">Phone Number *</Label>
+                        <Input
+                          id="parentPhone"
+                          type="tel"
+                          placeholder="+233 20 000 0000"
+                          {...register("parentPhone")}
+                        />
+                        {errors.parentPhone && (
+                          <p className="text-xs text-red-600">
+                            {errors.parentPhone.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -29,12 +29,17 @@ public class FeeService {
     private final UserRepository userRepository;
     private final SchoolClassRepository schoolClassRepository;
 
-    public FeeResponse enterFee(FeeRequest request, String collectorPhone) {
+    public FeeResponse enterFee(FeeRequest request, User currentUser) {
         Student student = studentRepository.findById(request.studentId())
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + request.studentId()));
 
-        User collector = userRepository.findByPhone(collectorPhone)
-                .orElseThrow(() -> new RuntimeException("User not found with phone: " + collectorPhone));
+        User collector;
+        if (currentUser.getRole() == Role.PRINCIPAL && request.collectedById() != null) {
+            collector = userRepository.findById(request.collectedById())
+                    .orElseThrow(() -> new RuntimeException("Collector not found with ID: " + request.collectedById()));
+        } else {
+            collector = currentUser;
+        }
 
         if (collector.getRole() == Role.TEACHER &&
                 !schoolClassRepository.existsByTeachersIdAndName(collector.getId(), student.getClassName())) {
@@ -225,6 +230,35 @@ public class FeeService {
 
         return new PrincipalAnalyticsResponse(
                 totalAmount, feeCount, todayAmount, todayCount, byTeacher, topStudents, dailyTrend, recentEntries);
+    }
+
+    public List<FeeResponse> getAllFees(LocalDate startDate, LocalDate endDate,
+                                        Long teacherId, Long studentId, String className) {
+        LocalDate start = startDate != null ? startDate : LocalDate.of(2000, 1, 1);
+        LocalDate end = endDate != null ? endDate : LocalDate.now();
+
+        List<Fee> fees = feeRepository.findByFeeDateBetween(start, end);
+
+        if (teacherId != null) {
+            fees = fees.stream()
+                    .filter(f -> f.getCollectedBy().getId().equals(teacherId))
+                    .collect(Collectors.toList());
+        }
+        if (studentId != null) {
+            fees = fees.stream()
+                    .filter(f -> f.getStudent().getId().equals(studentId))
+                    .collect(Collectors.toList());
+        }
+        if (className != null && !className.isBlank()) {
+            fees = fees.stream()
+                    .filter(f -> className.equals(f.getStudent().getClassName()))
+                    .collect(Collectors.toList());
+        }
+
+        return fees.stream()
+                .sorted(Comparator.comparing(Fee::getFeeDate).reversed())
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     public List<FeeResponse> getFeesByStudent(Long studentId) {

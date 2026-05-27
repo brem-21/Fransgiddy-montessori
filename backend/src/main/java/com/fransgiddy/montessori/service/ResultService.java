@@ -106,6 +106,15 @@ public class ResultService {
         double average = total / results.size();
         String overallGrade = average >= 80 ? "A" : average >= 70 ? "B" : average >= 60 ? "C" : average >= 50 ? "D" : "F";
 
+        // Compute position within class for this term/year
+        List<Result> classResults = resultRepository.findByClassNameAndTermAndAcademicYear(student.getClassName(), term, academicYear);
+        Map<Long, Double> studentTotals = classResults.stream()
+                .collect(Collectors.groupingBy(r -> r.getStudent().getId(), Collectors.summingDouble(Result::getScore)));
+        int totalStudents = studentTotals.size();
+        int position = (int) studentTotals.entrySet().stream()
+                .filter(e -> e.getValue() > total)
+                .count() + 1;
+
         return new ReportCardResponse(
                 student.getFirstName() + " " + student.getLastName(),
                 student.getClassName(),
@@ -114,7 +123,9 @@ public class ResultService {
                 entries,
                 total,
                 average,
-                overallGrade
+                overallGrade,
+                position,
+                totalStudents
         );
     }
 

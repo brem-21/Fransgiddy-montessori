@@ -97,6 +97,7 @@ export default function AdminRegistrationsPage() {
             No registrations received yet.
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -115,7 +116,7 @@ export default function AdminRegistrationsPage() {
                   <TableRow key={reg.id}>
                     <TableCell>
                       <div className="font-medium">{reg.parentName}</div>
-                      <div className="text-xs text-gray-400">{reg.parentEmail}</div>
+                      <div className="text-xs text-gray-400">{reg.parentPhone}</div>
                     </TableCell>
                     <TableCell>
                       {reg.childFirstName} {reg.childLastName}
@@ -153,6 +154,7 @@ export default function AdminRegistrationsPage() {
               })}
             </TableBody>
           </Table>
+          </div>
         )}
       </Card>
     </div>

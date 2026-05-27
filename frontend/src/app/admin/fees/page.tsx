@@ -23,15 +23,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { feeApi } from "@/lib/api";
-import { useMyStudents } from "@/hooks/use-my-students";
+import { feeApi, userApi, studentApi } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
-import type { Fee } from "@/types";
+import type { Fee, User, Student } from "@/types";
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
 const schema = z.object({
   studentId: z.string().min(1, "Select a student"),
+  collectedById: z.string().min(1, "Select who collected this payment"),
   amount: z
     .number({ invalid_type_error: "Enter a valid amount" })
     .positive("Amount must be greater than 0"),
@@ -51,9 +52,11 @@ function formatGHS(amount: number) {
   );
 }
 
-export default function TeacherFeesPage() {
-  const { students } = useMyStudents();
-  const [myFees, setMyFees] = useState<Fee[]>([]);
+export default function AdminFeesPage() {
+  const { user: currentUser } = useAuth();
+  const [students, setStudents] = useState<Student[]>([]);
+  const [teachers, setTeachers] = useState<User[]>([]);
+  const [allFees, setAllFees] = useState<Fee[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const {
@@ -64,16 +67,27 @@ export default function TeacherFeesPage() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { feeDate: todayISO(), description: "" },
+    defaultValues: { feeDate: todayISO(), description: "", collectedById: "", studentId: "" },
   });
 
   const fetchData = async () => {
     const feesRes = await feeApi.myFees().catch(() => null);
-    if (feesRes) setMyFees(feesRes.data.data);
+    if (feesRes) setAllFees(feesRes.data.data);
   };
 
   useEffect(() => {
-    fetchData();
+    Promise.allSettled([
+      studentApi.getAll(),
+      userApi.getAll(),
+      feeApi.myFees(),
+    ]).then(([studRes, usersRes, feesRes]) => {
+      if (studRes.status === "fulfilled")
+        setStudents(studRes.value.data.data.filter((s) => s.active));
+      if (usersRes.status === "fulfilled")
+        setTeachers(usersRes.value.data.data.filter((u) => u.role === "TEACHER" && u.active));
+      if (feesRes.status === "fulfilled")
+        setAllFees(feesRes.value.data.data);
+    });
   }, []);
 
   const onSubmit = async (data: FormData) => {
@@ -84,12 +98,13 @@ export default function TeacherFeesPage() {
         amount: data.amount,
         description: data.description || undefined,
         feeDate: data.feeDate,
+        collectedById: Number(data.collectedById),
       });
       toast({
         title: "Payment Recorded",
         description: `Fee of ${formatGHS(data.amount)} recorded successfully.`,
       });
-      reset({ feeDate: todayISO(), description: "" });
+      reset({ feeDate: todayISO(), description: "", collectedById: "", studentId: "" });
       fetchData();
     } catch (err: unknown) {
       const message =
@@ -102,26 +117,58 @@ export default function TeacherFeesPage() {
   };
 
   const today = todayISO();
-  const todayEntries = myFees.filter((f) => f.feeDate === today);
+  const todayEntries = allFees.filter((f) => f.feeDate === today);
   const todayTotal = todayEntries.reduce((sum, f) => sum + f.amount, 0);
+
+  // Build collector options: teachers + principal (self)
+  const collectorOptions: { id: string; name: string }[] = [
+    ...(currentUser ? [{ id: String(currentUser.id), name: `${currentUser.name} (You)` }] : []),
+    ...teachers.map((t) => ({ id: String(t.id), name: t.name })),
+  ];
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Enter Daily Fees</h1>
         <p className="text-gray-500 text-sm mt-1">
-          Record fee payments collected from students.
+          Record fee payments on behalf of any teacher or yourself.
         </p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Left — Fee Entry Form */}
+        {/* Fee Entry Form */}
         <Card className="border-0 shadow-sm">
           <CardHeader>
             <CardTitle className="text-base">Record Fee Payment</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Collected By */}
+              <div className="space-y-1.5">
+                <Label>Collected By *</Label>
+                <Controller
+                  name="collectedById"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select collector..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {collectorOptions.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.collectedById && (
+                  <p className="text-xs text-red-600">{errors.collectedById.message}</p>
+                )}
+              </div>
+
               {/* Student */}
               <div className="space-y-1.5">
                 <Label>Student *</Label>
@@ -144,9 +191,7 @@ export default function TeacherFeesPage() {
                   )}
                 />
                 {errors.studentId && (
-                  <p className="text-xs text-red-600">
-                    {errors.studentId.message}
-                  </p>
+                  <p className="text-xs text-red-600">{errors.studentId.message}</p>
                 )}
               </div>
 
@@ -169,8 +214,7 @@ export default function TeacherFeesPage() {
               {/* Description */}
               <div className="space-y-1.5">
                 <Label htmlFor="description">
-                  Description{" "}
-                  <span className="text-gray-400">(optional)</span>
+                  Description <span className="text-gray-400">(optional)</span>
                 </Label>
                 <Input
                   id="description"
@@ -182,11 +226,7 @@ export default function TeacherFeesPage() {
               {/* Fee Date */}
               <div className="space-y-1.5">
                 <Label htmlFor="feeDate">Fee Date *</Label>
-                <Input
-                  id="feeDate"
-                  type="date"
-                  {...register("feeDate")}
-                />
+                <Input id="feeDate" type="date" {...register("feeDate")} />
                 {errors.feeDate && (
                   <p className="text-xs text-red-600">{errors.feeDate.message}</p>
                 )}
@@ -199,7 +239,7 @@ export default function TeacherFeesPage() {
           </CardContent>
         </Card>
 
-        {/* Right — Today's Entries */}
+        {/* Today's Entries */}
         <Card className="border-0 shadow-sm">
           <CardHeader>
             <CardTitle className="text-base">Today&apos;s Entries</CardTitle>
@@ -211,47 +251,42 @@ export default function TeacherFeesPage() {
               </div>
             ) : (
               <>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Student</TableHead>
-                      <TableHead>Class</TableHead>
-                      <TableHead>Amount (₵)</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Time</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {todayEntries.map((f) => (
-                      <TableRow key={f.id}>
-                        <TableCell className="font-medium">
-                          {f.studentName}
-                        </TableCell>
-                        <TableCell className="text-sm text-gray-500">
-                          {f.studentClass}
-                        </TableCell>
-                        <TableCell className="font-semibold text-indigo-700">
-                          {formatGHS(f.amount)}
-                        </TableCell>
-                        <TableCell className="text-sm text-gray-500">
-                          {f.description || "—"}
-                        </TableCell>
-                        <TableCell className="text-xs text-gray-400">
-                          {new Date(f.createdAt).toLocaleTimeString("en-GH", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Student</TableHead>
+                        <TableHead className="hidden sm:table-cell">Class</TableHead>
+                        <TableHead>Amount</TableHead>
+                        <TableHead className="hidden sm:table-cell">Collected By</TableHead>
+                        <TableHead className="hidden md:table-cell">Description</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {todayEntries.map((f) => (
+                        <TableRow key={f.id}>
+                          <TableCell className="font-medium">{f.studentName}</TableCell>
+                          <TableCell className="text-sm text-gray-500 hidden sm:table-cell">
+                            {f.studentClass}
+                          </TableCell>
+                          <TableCell className="font-semibold text-indigo-700">
+                            {formatGHS(f.amount)}
+                          </TableCell>
+                          <TableCell className="text-sm text-gray-500 hidden sm:table-cell">
+                            {f.collectedByName}
+                          </TableCell>
+                          <TableCell className="text-sm text-gray-500 hidden md:table-cell">
+                            {f.description || "—"}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
                 <div className="px-4 py-3 border-t border-gray-100 flex justify-end">
                   <span className="text-sm font-semibold text-gray-700">
-                    Total:{" "}
-                    <span className="text-indigo-700">
-                      {formatGHS(todayTotal)}
-                    </span>
+                    Today&apos;s Total:{" "}
+                    <span className="text-indigo-700">{formatGHS(todayTotal)}</span>
                   </span>
                 </div>
               </>

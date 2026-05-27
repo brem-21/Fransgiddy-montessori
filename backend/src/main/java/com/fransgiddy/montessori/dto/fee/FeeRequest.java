@@ -10,5 +10,6 @@ public record FeeRequest(
         @NotNull(message = "Student ID is required") Long studentId,
         @NotNull(message = "Amount is required") @Positive(message = "Amount must be positive") BigDecimal amount,
         String description,
-        LocalDate feeDate
+        LocalDate feeDate,
+        Long collectedById
 ) {}

@@ -36,7 +36,6 @@ const studentSchema = z.object({
   dateOfBirth: z.string().min(1, "Date of birth required"),
   parentName: z.string().min(1, "Parent name required"),
   parentPhone: z.string().min(7, "Parent phone required"),
-  parentEmail: z.string().email("Valid parent email required"),
   enrollmentDate: z.string().min(1, "Enrollment date required"),
 });
 
@@ -80,7 +79,6 @@ export default function AdminStudentsPage() {
       dateOfBirth: "",
       parentName: "",
       parentPhone: "",
-      parentEmail: "",
       enrollmentDate: "",
     });
     setDialogOpen(true);
@@ -95,7 +93,6 @@ export default function AdminStudentsPage() {
       dateOfBirth: student.dateOfBirth,
       parentName: student.parentName,
       parentPhone: student.parentPhone,
-      parentEmail: student.parentEmail,
       enrollmentDate: student.enrollmentDate,
     });
     setDialogOpen(true);
@@ -153,6 +150,7 @@ export default function AdminStudentsPage() {
             No students enrolled yet.
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -211,6 +209,7 @@ export default function AdminStudentsPage() {
               ))}
             </TableBody>
           </Table>
+          </div>
         )}
       </Card>
 
@@ -265,21 +264,12 @@ export default function AdminStudentsPage() {
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="parentPhone">Parent Phone *</Label>
-                <Input id="parentPhone" type="tel" {...register("parentPhone")} />
-                {errors.parentPhone && (
-                  <p className="text-xs text-red-600">{errors.parentPhone.message}</p>
-                )}
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="parentEmail">Parent Email *</Label>
-                <Input id="parentEmail" type="email" {...register("parentEmail")} />
-                {errors.parentEmail && (
-                  <p className="text-xs text-red-600">{errors.parentEmail.message}</p>
-                )}
-              </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="parentPhone">Parent Phone *</Label>
+              <Input id="parentPhone" type="tel" {...register("parentPhone")} />
+              {errors.parentPhone && (
+                <p className="text-xs text-red-600">{errors.parentPhone.message}</p>
+              )}
             </div>
 
             <div className="space-y-1.5">

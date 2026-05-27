@@ -54,8 +54,8 @@ export const authApi = {
       password,
     }),
 
-  invite: (email: string, role: string, name: string) =>
-    apiClient.post<ApiResponse<null>>("/auth/invite", { email, role, name }),
+  invite: (phone: string, role: string, name: string) =>
+    apiClient.post<ApiResponse<null>>("/auth/invite", { phone, role, name }),
 
   completeRegistration: (token: string, name: string, password: string) =>
     apiClient.post<ApiResponse<{ token: string; user: User }>>(
@@ -182,7 +182,6 @@ export const teacherSmsApi = {
 export const registrationApi = {
   submit: (data: {
     parentName: string;
-    parentEmail: string;
     parentPhone: string;
     childFirstName: string;
     childLastName: string;
@@ -238,6 +237,7 @@ export const feeApi = {
     amount: number;
     description?: string;
     feeDate?: string;
+    collectedById?: number;
   }) => apiClient.post<ApiResponse<Fee>>("/fees", data),
 
   myFees: () => apiClient.get<ApiResponse<Fee[]>>("/fees/my-fees"),
@@ -260,6 +260,14 @@ export const feeApi = {
 
   byStudent: (studentId: number) =>
     apiClient.get<ApiResponse<Fee[]>>(`/fees/student/${studentId}`),
+
+  getAllEntries: (params?: {
+    startDate?: string;
+    endDate?: string;
+    teacherId?: number;
+    studentId?: number;
+    className?: string;
+  }) => apiClient.get<ApiResponse<Fee[]>>("/fees/all", { params }),
 };
 
 export const settingsApi = {

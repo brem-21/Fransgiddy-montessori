@@ -29,9 +29,6 @@ public class DataSeeder implements ApplicationRunner {
     private final SchoolClassRepository classRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${app.principal.email:principal@fransgiddy.edu.gh}")
-    private String principalEmail;
-
     @Value("${app.principal.password:Principal@2024}")
     private String principalPassword;
 
@@ -150,11 +147,11 @@ public class DataSeeder implements ApplicationRunner {
 
         // ── Registrations ──────────────────────────────────────────────────────
         registrationRepository.saveAll(List.of(
-            registration("Maame Brew",   "maame.brew@gmail.com",   "0201000001", "Akwasi",   "Brew",    "2019-04-12", "Nursery",  "Interested in Montessori curriculum", "PENDING"),
-            registration("Fati Alhassan","fati.alhassan@gmail.com","0201000002", "Ibrahim",  "Alhassan","2018-09-03", "Grade 1",  "Relocating from Kumasi, strong academic background", "REVIEWED"),
-            registration("Rose Acheampong","rose.a@gmail.com",     "0201000003", "Priscilla","Acheampong","2017-12-21","Grade 2", "Looking for a nurturing school environment", "ACCEPTED"),
-            registration("Emmanuel Doku","edoku@gmail.com",        "0201000004", "Joshua",   "Doku",    "2020-02-15", "Nursery",  "Heard great things from neighbours", "PENDING"),
-            registration("Vida Asare",   "vida.asare@gmail.com",   "0201000005", "Miriam",   "Asare",   "2016-07-08", "Grade 3",  "Child has special interest in science and maths", "PENDING")
+            registration("Maame Brew",    "0201000001", "Akwasi",    "Brew",       "2019-04-12", "Nursery", "Interested in Montessori curriculum", "PENDING"),
+            registration("Fati Alhassan", "0201000002", "Ibrahim",   "Alhassan",   "2018-09-03", "Grade 1", "Relocating from Kumasi, strong academic background", "REVIEWED"),
+            registration("Rose Acheampong","0201000003","Priscilla", "Acheampong", "2017-12-21", "Grade 2", "Looking for a nurturing school environment", "ACCEPTED"),
+            registration("Emmanuel Doku", "0201000004", "Joshua",    "Doku",       "2020-02-15", "Nursery", "Heard great things from neighbours", "PENDING"),
+            registration("Vida Asare",    "0201000005", "Miriam",    "Asare",      "2016-07-08", "Grade 3", "Child has special interest in science and maths", "PENDING")
         ));
 
         // ── Fees ───────────────────────────────────────────────────────────────
@@ -236,10 +233,9 @@ public class DataSeeder implements ApplicationRunner {
         System.out.println("=== School classes seeded ===");
     }
 
-    private User createTeacher(String name, String email, String phone, String password) {
+    private User createTeacher(String name, String phone, String password) {
         User t = new User();
         t.setName(name);
-        t.setEmail(email);
         t.setPhone(phone);
         t.setPasswordHash(passwordEncoder.encode(password));
         t.setRole(Role.TEACHER);
@@ -255,7 +251,7 @@ public class DataSeeder implements ApplicationRunner {
     }
 
     private Student student(String first, String last, String className,
-                             String dob, String parentName, String phone, String email) {
+                             String dob, String parentName, String phone) {
         Student s = new Student();
         s.setFirstName(first);
         s.setLastName(last);
@@ -263,7 +259,6 @@ public class DataSeeder implements ApplicationRunner {
         s.setDateOfBirth(LocalDate.parse(dob));
         s.setParentName(parentName);
         s.setParentPhone(phone);
-        s.setParentEmail(email);
         s.setEnrollmentDate(LocalDate.of(2024, 9, 1));
         s.setActive(true);
         return s;
@@ -293,12 +288,11 @@ public class DataSeeder implements ApplicationRunner {
         return a;
     }
 
-    private Registration registration(String parentName, String parentEmail, String parentPhone,
+    private Registration registration(String parentName, String parentPhone,
                                        String childFirst, String childLast, String dob,
                                        String desiredClass, String message, String status) {
         Registration r = new Registration();
         r.setParentName(parentName);
-        r.setParentEmail(parentEmail);
         r.setParentPhone(parentPhone);
         r.setChildFirstName(childFirst);
         r.setChildLastName(childLast);

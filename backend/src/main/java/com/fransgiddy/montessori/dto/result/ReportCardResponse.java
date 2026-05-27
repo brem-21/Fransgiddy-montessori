@@ -10,7 +10,9 @@ public record ReportCardResponse(
         List<ReportCardEntry> results,
         double totalScore,
         double average,
-        String overallGrade
+        String overallGrade,
+        int position,
+        int totalStudents
 ) {
     public record ReportCardEntry(
             String subjectName,

@@ -64,7 +64,7 @@ export default function TeacherFeesPage() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { feeDate: todayISO(), description: "" },
+    defaultValues: { feeDate: todayISO(), description: "", studentId: "" },
   });
 
   const fetchData = async () => {
@@ -89,7 +89,7 @@ export default function TeacherFeesPage() {
         title: "Payment Recorded",
         description: `Fee of ${formatGHS(data.amount)} recorded successfully.`,
       });
-      reset({ feeDate: todayISO(), description: "" });
+      reset({ feeDate: todayISO(), description: "", studentId: "" });
       fetchData();
     } catch (err: unknown) {
       const message =
@@ -211,14 +211,15 @@ export default function TeacherFeesPage() {
               </div>
             ) : (
               <>
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Student</TableHead>
-                      <TableHead>Class</TableHead>
-                      <TableHead>Amount (₵)</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Time</TableHead>
+                      <TableHead className="hidden sm:table-cell">Class</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead className="hidden sm:table-cell">Description</TableHead>
+                      <TableHead className="hidden md:table-cell">Time</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -227,16 +228,16 @@ export default function TeacherFeesPage() {
                         <TableCell className="font-medium">
                           {f.studentName}
                         </TableCell>
-                        <TableCell className="text-sm text-gray-500">
+                        <TableCell className="text-sm text-gray-500 hidden sm:table-cell">
                           {f.studentClass}
                         </TableCell>
                         <TableCell className="font-semibold text-indigo-700">
                           {formatGHS(f.amount)}
                         </TableCell>
-                        <TableCell className="text-sm text-gray-500">
+                        <TableCell className="text-sm text-gray-500 hidden sm:table-cell">
                           {f.description || "—"}
                         </TableCell>
-                        <TableCell className="text-xs text-gray-400">
+                        <TableCell className="text-xs text-gray-400 hidden md:table-cell">
                           {new Date(f.createdAt).toLocaleTimeString("en-GH", {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -246,6 +247,7 @@ export default function TeacherFeesPage() {
                     ))}
                   </TableBody>
                 </Table>
+                </div>
                 <div className="px-4 py-3 border-t border-gray-100 flex justify-end">
                   <span className="text-sm font-semibold text-gray-700">
                     Total:{" "}

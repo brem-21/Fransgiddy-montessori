@@ -22,9 +22,15 @@ import {
 import { classApi, resultApi } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import type { SchoolClass, Rankings } from "@/types";
-import { Trophy } from "lucide-react";
+import { Trophy, Users } from "lucide-react";
 
 const TERMS = ["FIRST", "SECOND", "THIRD"];
+
+function ordinal(n: number): string {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
 
 function gradeColor(grade: string) {
   if (grade === "A") return "text-green-600 font-bold";
@@ -35,10 +41,10 @@ function gradeColor(grade: string) {
 }
 
 function rankBadge(rank: number) {
-  if (rank === 1) return "bg-yellow-100 text-yellow-800 border-yellow-300";
-  if (rank === 2) return "bg-gray-100 text-gray-700 border-gray-300";
-  if (rank === 3) return "bg-orange-100 text-orange-700 border-orange-300";
-  return "bg-white text-gray-600";
+  if (rank === 1) return "bg-yellow-100 text-yellow-800 border border-yellow-300";
+  if (rank === 2) return "bg-gray-100 text-gray-700 border border-gray-300";
+  if (rank === 3) return "bg-orange-100 text-orange-700 border border-orange-300";
+  return "bg-white text-gray-500 border border-gray-200";
 }
 
 export default function TeacherRankingsPage() {
@@ -135,6 +141,10 @@ export default function TeacherRankingsPage() {
             <CardTitle className="text-base flex items-center gap-2">
               <Trophy className="h-5 w-5 text-yellow-500" />
               {selectedClass} — {selectedTerm.charAt(0) + selectedTerm.slice(1).toLowerCase()} Term Rankings
+              <span className="ml-auto flex items-center gap-1 text-sm font-normal text-gray-500">
+                <Users className="h-4 w-4" />
+                {rankings.rankings.length} student{rankings.rankings.length !== 1 ? "s" : ""}
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0 overflow-x-auto">
@@ -144,7 +154,7 @@ export default function TeacherRankingsPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-purple-50">
-                    <TableHead className="font-bold">Rank</TableHead>
+                    <TableHead className="font-bold">Position</TableHead>
                     <TableHead className="font-bold">Student</TableHead>
                     {rankings.subjects.map((s) => (
                       <TableHead key={s} className="text-center font-medium text-sm">{s}</TableHead>
@@ -158,8 +168,8 @@ export default function TeacherRankingsPage() {
                   {rankings.rankings.map((row) => (
                     <TableRow key={row.studentId} className="hover:bg-purple-50/50">
                       <TableCell>
-                        <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full border text-sm font-bold ${rankBadge(row.rank)}`}>
-                          {row.rank}
+                        <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-sm font-bold ${rankBadge(row.rank)}`}>
+                          {ordinal(row.rank)}
                         </span>
                       </TableCell>
                       <TableCell className="font-medium">{row.studentName}</TableCell>

@@ -13,10 +13,6 @@ import java.util.List;
 @Repository
 public interface FeeRepository extends JpaRepository<Fee, Long> {
 
-    List<Fee> findByCollectedByEmail(String email);
-
-    List<Fee> findByCollectedByEmailAndFeeDateBetween(String email, LocalDate start, LocalDate end);
-
     List<Fee> findByCollectedByPhone(String phone);
 
     List<Fee> findByCollectedByPhoneAndFeeDateBetween(String phone, LocalDate start, LocalDate end);
@@ -26,11 +22,6 @@ public interface FeeRepository extends JpaRepository<Fee, Long> {
     List<Fee> findByStudentIdAndFeeDateBetween(Long studentId, LocalDate start, LocalDate end);
 
     List<Fee> findByCollectedByIdAndFeeDateBetween(Long teacherId, LocalDate start, LocalDate end);
-
-    List<Fee> findByCollectedByEmailAndStudentId(String email, Long studentId);
-
-    @Query("SELECT SUM(f.amount) FROM Fee f WHERE f.collectedBy.email = :email AND f.feeDate BETWEEN :start AND :end")
-    BigDecimal sumByCollectorAndDateRange(@Param("email") String email, @Param("start") LocalDate start, @Param("end") LocalDate end);
 
     @Query("SELECT SUM(f.amount) FROM Fee f WHERE f.feeDate BETWEEN :start AND :end")
     BigDecimal sumByDateRange(@Param("start") LocalDate start, @Param("end") LocalDate end);

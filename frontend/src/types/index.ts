@@ -2,7 +2,6 @@ export interface User {
   id: number;
   name: string;
   phone: string;
-  email?: string;
   role: "PRINCIPAL" | "TEACHER";
   active: boolean;
   createdAt: string;
@@ -16,7 +15,6 @@ export interface Student {
   dateOfBirth: string;
   parentName: string;
   parentPhone: string;
-  parentEmail: string;
   enrollmentDate: string;
   active: boolean;
 }
@@ -53,7 +51,6 @@ export interface Announcement {
 export interface Registration {
   id: number;
   parentName: string;
-  parentEmail: string;
   parentPhone: string;
   childFirstName: string;
   childLastName: string;
@@ -86,6 +83,8 @@ export interface ReportCard {
   totalScore: number;
   average: number;
   overallGrade: string;
+  position?: number;
+  totalStudents?: number;
 }
 
 export interface Fee {
