@@ -16,12 +16,19 @@ import { Slideshow } from "@/components/Slideshow";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { announcementApi } from "@/lib/api";
 import type { Announcement } from "@/types";
 
 export default function LandingPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [announcementsLoading, setAnnouncementsLoading] = useState(true);
+  const [selected, setSelected] = useState<Announcement | null>(null);
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -36,6 +43,8 @@ export default function LandingPage() {
     };
     fetchAnnouncements();
   }, []);
+
+  const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
 
   return (
     <div className="min-h-screen bg-white">
@@ -202,14 +211,18 @@ export default function LandingPage() {
                 /\.(jpe?g|png|gif|webp|svg)$/i.test(u)
               );
               return (
-                <Card key={a.id} className="hover:shadow-md transition-shadow overflow-hidden">
+                <Card
+                  key={a.id}
+                  onClick={() => setSelected(a)}
+                  className="hover:shadow-lg transition-shadow overflow-hidden cursor-pointer group"
+                >
                   {imageUrl && (
                     <div className="h-44 overflow-hidden bg-gray-100">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${imageUrl}`}
+                        src={`${apiBase}${imageUrl}`}
                         alt={a.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                   )}
@@ -225,13 +238,18 @@ export default function LandingPage() {
                     <p className="text-gray-500 text-sm line-clamp-3 mb-3">
                       {a.content}
                     </p>
-                    <div className="flex items-center gap-1 text-xs text-gray-400">
-                      <Calendar className="h-3 w-3" />
-                      {new Date(a.createdAt).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1 text-xs text-gray-400">
+                        <Calendar className="h-3 w-3" />
+                        {new Date(a.createdAt).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </div>
+                      <span className="text-xs text-indigo-600 font-medium group-hover:underline">
+                        Read more →
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
@@ -264,6 +282,61 @@ export default function LandingPage() {
           </Button>
         </div>
       </section>
+
+      {/* Announcement Detail Dialog */}
+      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          {selected && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-2 mb-1">
+                  <Badge variant="secondary" className="text-xs uppercase">
+                    {selected.type}
+                  </Badge>
+                </div>
+                <DialogTitle className="text-xl leading-snug pr-6">
+                  {selected.title}
+                </DialogTitle>
+                <div className="flex items-center gap-4 text-xs text-gray-400 pt-1">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {new Date(selected.createdAt).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                  {selected.authorName && (
+                    <span className="text-gray-400">By {selected.authorName}</span>
+                  )}
+                </div>
+              </DialogHeader>
+
+              {/* Media gallery */}
+              {selected.mediaUrls && selected.mediaUrls.length > 0 && (
+                <div className="space-y-3 mt-2">
+                  {selected.mediaUrls
+                    .filter((u) => /\.(jpe?g|png|gif|webp|svg)$/i.test(u))
+                    .map((u, i) => (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        key={i}
+                        src={`${apiBase}${u}`}
+                        alt={`${selected.title} image ${i + 1}`}
+                        className="w-full rounded-lg object-cover max-h-72"
+                      />
+                    ))}
+                </div>
+              )}
+
+              {/* Full content */}
+              <div className="mt-4 text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+                {selected.content}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer id="contact" className="bg-gray-900 text-gray-300 py-12">
