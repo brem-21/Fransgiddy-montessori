@@ -416,19 +416,20 @@ export default function TeacherReportCardPage() {
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
               __html: `
+                @page { margin: 15mm; }
                 @media print {
                   body * { visibility: hidden; }
                   #printable-report-card,
                   #printable-report-card * { visibility: visible; }
                   #printable-report-card {
-                    position: fixed !important;
+                    position: absolute !important;
                     top: 0 !important;
                     left: 0 !important;
                     width: 100% !important;
                     border: none !important;
                     box-shadow: none !important;
                     border-radius: 0 !important;
-                    padding: 24px !important;
+                    padding: 0 !important;
                     margin: 0 !important;
                     max-width: 100% !important;
                   }

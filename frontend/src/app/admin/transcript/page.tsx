@@ -310,18 +310,20 @@ export default function AdminTranscriptPage() {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html: `
+            @page { margin: 15mm; }
             @media print {
               body * { visibility: hidden; }
               #printable-transcript,
               #printable-transcript * { visibility: visible; }
               #printable-transcript {
-                position: fixed !important;
-                top: 0 !important; left: 0 !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
                 width: 100% !important;
                 border: none !important;
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                padding: 20px !important;
+                padding: 0 !important;
                 margin: 0 !important;
                 max-width: 100% !important;
               }
