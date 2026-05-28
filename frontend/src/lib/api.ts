@@ -87,9 +87,14 @@ export const studentApi = {
 
 export const subjectApi = {
   getAll: () => apiClient.get<ApiResponse<Subject[]>>("/subjects"),
-
+  getByClassLevel: (classLevel: string) =>
+    apiClient.get<ApiResponse<Subject[]>>(`/subjects/class/${encodeURIComponent(classLevel)}`),
   create: (data: Omit<Subject, "id">) =>
     apiClient.post<ApiResponse<Subject>>("/subjects", data),
+  update: (id: number, data: Omit<Subject, "id">) =>
+    apiClient.put<ApiResponse<Subject>>(`/subjects/${id}`, data),
+  delete: (id: number) =>
+    apiClient.delete<ApiResponse<null>>(`/subjects/${id}`),
 };
 
 export const resultApi = {

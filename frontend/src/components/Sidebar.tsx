@@ -23,6 +23,7 @@ import {
   Settings,
   Scroll,
   X,
+  LibraryBig,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -39,6 +40,7 @@ const adminLinks: NavItem[] = [
   { label: "Users", href: "/admin/users", icon: <Users className="h-4 w-4" /> },
   { label: "Students", href: "/admin/students", icon: <UserSquare className="h-4 w-4" /> },
   { label: "Classes", href: "/admin/classes", icon: <School className="h-4 w-4" /> },
+  { label: "Subjects", href: "/admin/subjects", icon: <LibraryBig className="h-4 w-4" /> },
   { label: "Registrations", href: "/admin/registrations", icon: <ClipboardList className="h-4 w-4" /> },
   { label: "Enter Results", href: "/admin/results", icon: <ClipboardCheck className="h-4 w-4" /> },
   { label: "Report Card", href: "/admin/report-card", icon: <BookOpen className="h-4 w-4" /> },
