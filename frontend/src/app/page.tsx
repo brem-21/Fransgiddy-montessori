@@ -25,16 +25,19 @@ import {
 import { announcementApi } from "@/lib/api";
 import type { Announcement } from "@/types";
 
+const PAGE_SIZE = 3;
+
 export default function LandingPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [announcementsLoading, setAnnouncementsLoading] = useState(true);
   const [selected, setSelected] = useState<Announcement | null>(null);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
         const res = await announcementApi.getPublic();
-        setAnnouncements(res.data.data.slice(0, 3));
+        setAnnouncements(res.data.data);
       } catch {
         // silent fail for public page
       } finally {
@@ -43,6 +46,9 @@ export default function LandingPage() {
     };
     fetchAnnouncements();
   }, []);
+
+  const totalPages = Math.ceil(announcements.length / PAGE_SIZE);
+  const paginated = announcements.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
   const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
 
@@ -205,8 +211,9 @@ export default function LandingPage() {
             <p className="text-gray-400">No announcements at the moment.</p>
           </div>
         ) : (
+          <>
           <div className="grid sm:grid-cols-3 gap-6">
-            {announcements.map((a) => {
+            {paginated.map((a) => {
               const imageUrl = a.mediaUrls?.find((u) =>
                 /\.(jpe?g|png|gif|webp|svg)$/i.test(u)
               );
@@ -217,12 +224,12 @@ export default function LandingPage() {
                   className="hover:shadow-lg transition-shadow overflow-hidden cursor-pointer group"
                 >
                   {imageUrl && (
-                    <div className="h-44 overflow-hidden bg-gray-100">
+                    <div className="bg-gray-50">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={`${apiBase}${imageUrl}`}
                         alt={a.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full object-contain"
                       />
                     </div>
                   )}
@@ -256,6 +263,34 @@ export default function LandingPage() {
               );
             })}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-4 mt-10">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={page === 0}
+              >
+                <ChevronRight className="h-4 w-4 rotate-180 mr-1" />
+                Previous
+              </Button>
+              <span className="text-sm text-gray-500">
+                Page {page + 1} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                disabled={page === totalPages - 1}
+              >
+                Next
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          )}
+          </>
         )}
       </section>
 
@@ -323,7 +358,7 @@ export default function LandingPage() {
                         key={i}
                         src={`${apiBase}${u}`}
                         alt={`${selected.title} image ${i + 1}`}
-                        className="w-full rounded-lg object-cover max-h-72"
+                        className="w-full rounded-lg object-contain"
                       />
                     ))}
                 </div>
