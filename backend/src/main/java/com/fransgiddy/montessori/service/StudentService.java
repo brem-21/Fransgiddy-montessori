@@ -50,15 +50,14 @@ public class StudentService {
                 .stream()
                 .map(c -> c.getName())
                 .collect(Collectors.toSet());
-        return studentRepository.findByActiveTrue().stream()
-                .filter(s -> myClassNames.contains(s.getClassName()))
+        if (myClassNames.isEmpty()) return List.of();
+        return studentRepository.findByClassNameInAndActiveTrue(myClassNames).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
     public List<StudentResponse> getStudentsByClass(String className) {
-        return studentRepository.findByClassName(className).stream()
-                .filter(Student::isActive)
+        return studentRepository.findByClassNameAndActiveTrue(className).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }

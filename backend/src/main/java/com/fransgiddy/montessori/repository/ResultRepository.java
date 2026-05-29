@@ -28,4 +28,7 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
         @Param("term") Term term,
         @Param("academicYear") String academicYear
     );
+
+    @Query("SELECT r FROM Result r WHERE r.student.className = :className")
+    List<Result> findByStudentClassName(@Param("className") String className);
 }

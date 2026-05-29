@@ -135,23 +135,22 @@ public class FeeService {
         LocalDate start = startDate != null ? startDate : YearMonth.now().atDay(1);
         LocalDate end = endDate != null ? endDate : LocalDate.now();
 
-        List<Fee> fees = feeRepository.findByFeeDateBetween(start, end);
+        boolean hasTeacher = teacherId != null;
+        boolean hasStudent = studentId != null;
+        boolean hasClass = className != null && !className.isBlank();
 
-        // Filter in-memory by teacherId and/or studentId if provided
-        if (teacherId != null) {
-            fees = fees.stream()
-                    .filter(f -> f.getCollectedBy().getId().equals(teacherId))
-                    .collect(Collectors.toList());
-        }
-        if (studentId != null) {
-            fees = fees.stream()
-                    .filter(f -> f.getStudent().getId().equals(studentId))
-                    .collect(Collectors.toList());
-        }
-        if (className != null && !className.isBlank()) {
-            fees = fees.stream()
-                    .filter(f -> className.equals(f.getStudent().getClassName()))
-                    .collect(Collectors.toList());
+        List<Fee> fees;
+        if (hasTeacher && !hasStudent && !hasClass) {
+            fees = feeRepository.findByCollectedByIdAndFeeDateBetween(teacherId, start, end);
+        } else if (hasStudent && !hasTeacher && !hasClass) {
+            fees = feeRepository.findByStudentIdAndFeeDateBetween(studentId, start, end);
+        } else if (hasClass && !hasTeacher && !hasStudent) {
+            fees = feeRepository.findByStudentClassNameAndFeeDateBetween(className, start, end);
+        } else {
+            fees = feeRepository.findByFeeDateBetween(start, end);
+            if (hasTeacher) fees = fees.stream().filter(f -> f.getCollectedBy().getId().equals(teacherId)).collect(Collectors.toList());
+            if (hasStudent) fees = fees.stream().filter(f -> f.getStudent().getId().equals(studentId)).collect(Collectors.toList());
+            if (hasClass) fees = fees.stream().filter(f -> className.equals(f.getStudent().getClassName())).collect(Collectors.toList());
         }
 
         BigDecimal totalAmount = fees.stream()
@@ -237,22 +236,22 @@ public class FeeService {
         LocalDate start = startDate != null ? startDate : LocalDate.of(2000, 1, 1);
         LocalDate end = endDate != null ? endDate : LocalDate.now();
 
-        List<Fee> fees = feeRepository.findByFeeDateBetween(start, end);
+        boolean hasTeacher = teacherId != null;
+        boolean hasStudent = studentId != null;
+        boolean hasClass = className != null && !className.isBlank();
 
-        if (teacherId != null) {
-            fees = fees.stream()
-                    .filter(f -> f.getCollectedBy().getId().equals(teacherId))
-                    .collect(Collectors.toList());
-        }
-        if (studentId != null) {
-            fees = fees.stream()
-                    .filter(f -> f.getStudent().getId().equals(studentId))
-                    .collect(Collectors.toList());
-        }
-        if (className != null && !className.isBlank()) {
-            fees = fees.stream()
-                    .filter(f -> className.equals(f.getStudent().getClassName()))
-                    .collect(Collectors.toList());
+        List<Fee> fees;
+        if (hasTeacher && !hasStudent && !hasClass) {
+            fees = feeRepository.findByCollectedByIdAndFeeDateBetween(teacherId, start, end);
+        } else if (hasStudent && !hasTeacher && !hasClass) {
+            fees = feeRepository.findByStudentIdAndFeeDateBetween(studentId, start, end);
+        } else if (hasClass && !hasTeacher && !hasStudent) {
+            fees = feeRepository.findByStudentClassNameAndFeeDateBetween(className, start, end);
+        } else {
+            fees = feeRepository.findByFeeDateBetween(start, end);
+            if (hasTeacher) fees = fees.stream().filter(f -> f.getCollectedBy().getId().equals(teacherId)).collect(Collectors.toList());
+            if (hasStudent) fees = fees.stream().filter(f -> f.getStudent().getId().equals(studentId)).collect(Collectors.toList());
+            if (hasClass) fees = fees.stream().filter(f -> className.equals(f.getStudent().getClassName())).collect(Collectors.toList());
         }
 
         return fees.stream()
@@ -262,8 +261,7 @@ public class FeeService {
     }
 
     public List<FeeResponse> getFeesByStudent(Long studentId) {
-        return feeRepository.findAll().stream()
-                .filter(f -> f.getStudent().getId().equals(studentId))
+        return feeRepository.findByStudentId(studentId).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }

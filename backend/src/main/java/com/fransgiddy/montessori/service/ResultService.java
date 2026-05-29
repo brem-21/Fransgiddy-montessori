@@ -137,7 +137,15 @@ public class ResultService {
 
         Student student = allResults.get(0).getStudent();
 
-        // Group by academicYear then by term
+        // Pre-fetch all results for the class once to avoid one query per term/year
+        List<Result> allClassResults = resultRepository.findByStudentClassName(student.getClassName());
+        Map<String, Map<Term, List<Result>>> classResultsByYearAndTerm = allClassResults.stream()
+                .collect(Collectors.groupingBy(
+                        Result::getAcademicYear,
+                        Collectors.groupingBy(Result::getTerm)
+                ));
+
+        // Group student results by academicYear then by term
         Map<String, Map<Term, List<Result>>> grouped = allResults.stream()
                 .collect(Collectors.groupingBy(
                         Result::getAcademicYear,
@@ -165,8 +173,10 @@ public class ResultService {
                                 double average = total / termResults.size();
                                 String grade = average >= 80 ? "A" : average >= 70 ? "B" : average >= 60 ? "C" : average >= 50 ? "D" : "F";
 
-                                // Position in class for this term
-                                List<Result> classResults = resultRepository.findByClassNameAndTermAndAcademicYear(student.getClassName(), term, year);
+                                // Position in class using pre-fetched data (no extra DB call per term)
+                                List<Result> classResults = classResultsByYearAndTerm
+                                        .getOrDefault(year, Map.of())
+                                        .getOrDefault(term, List.of());
                                 Map<Long, Double> studentTotals = classResults.stream()
                                         .collect(Collectors.groupingBy(r -> r.getStudent().getId(), Collectors.summingDouble(Result::getScore)));
                                 int totalStudents = studentTotals.size();
