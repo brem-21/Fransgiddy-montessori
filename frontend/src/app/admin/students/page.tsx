@@ -12,10 +12,18 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -25,9 +33,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { studentApi } from "@/lib/api";
+import { studentApi, classApi } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
-import type { Student } from "@/types";
+import type { Student, SchoolClass } from "@/types";
 
 const studentSchema = z.object({
   firstName: z.string().min(1, "First name required"),
@@ -43,15 +51,18 @@ type StudentFormData = z.infer<typeof studentSchema>;
 
 export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
+  const [classes, setClasses] = useState<SchoolClass[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [selectedClass, setSelectedClass] = useState("");
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<StudentFormData>({ resolver: zodResolver(studentSchema) });
 
@@ -68,10 +79,12 @@ export default function AdminStudentsPage() {
 
   useEffect(() => {
     fetchStudents();
+    classApi.getAll().then((res) => setClasses(res.data.data)).catch(() => {});
   }, []);
 
   const openAddDialog = () => {
     setEditingStudent(null);
+    setSelectedClass("");
     reset({
       firstName: "",
       lastName: "",
@@ -86,6 +99,7 @@ export default function AdminStudentsPage() {
 
   const openEditDialog = (student: Student) => {
     setEditingStudent(student);
+    setSelectedClass(student.className);
     reset({
       firstName: student.firstName,
       lastName: student.lastName,
@@ -144,7 +158,16 @@ export default function AdminStudentsPage() {
 
       <Card className="border-0 shadow-sm">
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Loading...</div>
+          <div className="p-6 space-y-3">
+            {[1,2,3,4].map((i) => (
+              <div key={i} className="flex gap-4 items-center">
+                <div className="h-4 flex-1 bg-gray-100 animate-pulse rounded" />
+                <div className="h-4 w-20 bg-gray-100 animate-pulse rounded" />
+                <div className="h-4 w-28 bg-gray-100 animate-pulse rounded" />
+                <div className="h-4 w-24 bg-gray-100 animate-pulse rounded" />
+              </div>
+            ))}
+          </div>
         ) : students.length === 0 ? (
           <div className="p-12 text-center text-gray-400">
             No students enrolled yet.
@@ -220,6 +243,11 @@ export default function AdminStudentsPage() {
             <DialogTitle>
               {editingStudent ? "Edit Student" : "Add New Student"}
             </DialogTitle>
+            <DialogDescription>
+              {editingStudent
+                ? "Update the student's details below."
+                : "Fill in the details to enrol a new student."}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -242,7 +270,28 @@ export default function AdminStudentsPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label htmlFor="className">Class *</Label>
-                <Input id="className" placeholder="e.g. Primary 3" {...register("className")} />
+                {classes.length > 0 ? (
+                  <Select
+                    value={selectedClass}
+                    onValueChange={(val) => {
+                      setSelectedClass(val);
+                      setValue("className", val, { shouldValidate: true });
+                    }}
+                  >
+                    <SelectTrigger id="className">
+                      <SelectValue placeholder="Select a class" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {classes.map((c) => (
+                        <SelectItem key={c.id} value={c.name}>
+                          {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input id="className" placeholder="e.g. Primary 3" {...register("className")} />
+                )}
                 {errors.className && (
                   <p className="text-xs text-red-600">{errors.className.message}</p>
                 )}
@@ -266,7 +315,13 @@ export default function AdminStudentsPage() {
 
             <div className="space-y-1.5">
               <Label htmlFor="parentPhone">Parent Phone *</Label>
-              <Input id="parentPhone" type="tel" {...register("parentPhone")} />
+              <Input
+                id="parentPhone"
+                type="tel"
+                maxLength={15}
+                pattern="[0-9]{7,15}"
+                {...register("parentPhone")}
+              />
               {errors.parentPhone && (
                 <p className="text-xs text-red-600">{errors.parentPhone.message}</p>
               )}

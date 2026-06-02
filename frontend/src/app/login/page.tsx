@@ -96,7 +96,7 @@ export default function LoginPage() {
           </CardHeader>
 
           <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-1.5">
                 <Label htmlFor="phone">Phone Number</Label>
                 <Input
@@ -104,6 +104,8 @@ export default function LoginPage() {
                   type="tel"
                   placeholder="0244 123 456"
                   autoComplete="tel"
+                  maxLength={15}
+                  pattern="[0-9]{10,15}"
                   {...register("phone")}
                 />
                 {errors.phone && (
@@ -148,6 +150,15 @@ export default function LoginPage() {
               >
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
+
+              <div className="text-center pt-1">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-indigo-600 hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </form>
           </CardContent>
         </Card>

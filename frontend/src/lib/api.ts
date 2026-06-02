@@ -39,8 +39,8 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== "undefined") {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        ["token","user","authToken","jwt","auth_token","user_token","access_token","userToken","auth","session"]
+          .forEach((k) => localStorage.removeItem(k));
         window.location.href = "/login";
       }
     }

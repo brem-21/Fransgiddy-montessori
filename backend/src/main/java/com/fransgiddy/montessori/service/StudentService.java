@@ -8,6 +8,8 @@ import com.fransgiddy.montessori.enums.Role;
 import com.fransgiddy.montessori.repository.SchoolClassRepository;
 import com.fransgiddy.montessori.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +27,12 @@ public class StudentService {
     @Transactional
     public StudentResponse createStudent(StudentRequest request) {
         Student student = Student.builder()
-                .firstName(request.firstName())
-                .lastName(request.lastName())
-                .className(request.className())
+                .firstName(strip(request.firstName()))
+                .lastName(strip(request.lastName()))
+                .className(strip(request.className()))
                 .dateOfBirth(request.dateOfBirth())
-                .parentName(request.parentName())
-                .parentPhone(request.parentPhone())
+                .parentName(strip(request.parentName()))
+                .parentPhone(strip(request.parentPhone()))
                 .enrollmentDate(request.enrollmentDate())
                 .active(true)
                 .build();
@@ -67,12 +69,12 @@ public class StudentService {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
 
-        student.setFirstName(request.firstName());
-        student.setLastName(request.lastName());
-        student.setClassName(request.className());
+        student.setFirstName(strip(request.firstName()));
+        student.setLastName(strip(request.lastName()));
+        student.setClassName(strip(request.className()));
         student.setDateOfBirth(request.dateOfBirth());
-        student.setParentName(request.parentName());
-        student.setParentPhone(request.parentPhone());
+        student.setParentName(strip(request.parentName()));
+        student.setParentPhone(strip(request.parentPhone()));
         student.setEnrollmentDate(request.enrollmentDate());
 
         student = studentRepository.save(student);
@@ -85,6 +87,11 @@ public class StudentService {
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
         student.setActive(false);
         studentRepository.save(student);
+    }
+
+    private static String strip(String input) {
+        if (input == null) return null;
+        return Jsoup.clean(input, Safelist.none());
     }
 
     private StudentResponse toResponse(Student student) {

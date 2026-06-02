@@ -127,6 +127,8 @@ export default function RegisterPage() {
                           id="parentPhone"
                           type="tel"
                           placeholder="+233 20 000 0000"
+                          maxLength={15}
+                          pattern="[0-9+\-\s]{7,15}"
                           {...register("parentPhone")}
                         />
                         {errors.parentPhone && (

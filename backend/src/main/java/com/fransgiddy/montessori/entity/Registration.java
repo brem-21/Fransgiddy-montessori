@@ -38,6 +38,8 @@ public class Registration {
 
     private String desiredClass;
 
+    private String parentEmail;
+
     @Column(columnDefinition = "TEXT")
     private String message;
 

@@ -8,8 +8,11 @@ import com.fransgiddy.montessori.repository.InviteRepository;
 import com.fransgiddy.montessori.repository.UserRepository;
 import com.fransgiddy.montessori.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,19 +32,25 @@ public class AuthService {
     private final InviteRepository inviteRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final LoginRateLimiter rateLimiter;
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
     public LoginResponse login(LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.phone(), request.password())
-        );
-
-        User user = (User) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(user);
-
-        return new LoginResponse(token, user.getName(), user.getPhone(), user.getRole().name());
+        rateLimiter.checkRateLimit(request.phone());
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.phone(), request.password())
+            );
+            User user = (User) authentication.getPrincipal();
+            String token = jwtUtil.generateToken(user);
+            rateLimiter.recordSuccess(request.phone());
+            return new LoginResponse(user.getId(), token, user.getName(), user.getPhone(), user.getRole().name());
+        } catch (BadCredentialsException ex) {
+            rateLimiter.recordFailure(request.phone());
+            throw ex;
+        }
     }
 
     @Transactional
@@ -89,7 +98,7 @@ public class AuthService {
         }
 
         User user = User.builder()
-                .name(request.name())
+                .name(stripHtml(request.name()))
                 .phone(invite.getPhone())
                 .passwordHash(passwordEncoder.encode(request.password()))
                 .role(invite.getRole())
@@ -100,6 +109,19 @@ public class AuthService {
 
         invite.setStatus(InviteStatus.ACCEPTED);
         inviteRepository.save(invite);
+    }
+
+    private static String stripHtml(String input) {
+        if (input == null) return null;
+        return Jsoup.clean(input, Safelist.none());
+    }
+
+    public void requestPasswordReset(String phone) {
+        // Silently succeed even if user not found — prevents phone enumeration
+        if (phone == null || phone.isBlank()) return;
+        userRepository.findByPhone(phone.trim()).ifPresent(user -> {
+            // TODO: generate OTP, persist, and send via SmsService once that integration is wired
+        });
     }
 
     public Map<String, Object> getCurrentUser(String phone) {

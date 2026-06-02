@@ -5,6 +5,8 @@ import com.fransgiddy.montessori.entity.User;
 import com.fransgiddy.montessori.enums.Role;
 import com.fransgiddy.montessori.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +61,7 @@ public class UserService {
         }
 
         User user = User.builder()
-                .name(request.name())
+                .name(Jsoup.clean(request.name(), Safelist.none()))
                 .phone(request.phone())
                 .passwordHash(passwordEncoder.encode(request.password()))
                 .role(Role.TEACHER)

@@ -4,6 +4,8 @@ import com.fransgiddy.montessori.dto.registration.RegistrationRequest;
 import com.fransgiddy.montessori.entity.Registration;
 import com.fransgiddy.montessori.repository.RegistrationRepository;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +20,23 @@ public class RegistrationService {
     @Transactional
     public Registration submit(RegistrationRequest request) {
         Registration registration = Registration.builder()
-                .parentName(request.parentName())
-                .parentPhone(request.parentPhone())
-                .childFirstName(request.childFirstName())
-                .childLastName(request.childLastName())
+                .parentName(strip(request.parentName()))
+                .parentPhone(strip(request.parentPhone()))
+                .parentEmail(strip(request.parentEmail()))
+                .childFirstName(strip(request.childFirstName()))
+                .childLastName(strip(request.childLastName()))
                 .childDateOfBirth(request.childDateOfBirth())
-                .desiredClass(request.desiredClass())
-                .message(request.message())
+                .desiredClass(strip(request.desiredClass()))
+                .message(strip(request.message()))
                 .status("PENDING")
                 .build();
 
         return registrationRepository.save(registration);
+    }
+
+    private static String strip(String input) {
+        if (input == null) return null;
+        return Jsoup.clean(input, Safelist.none());
     }
 
     public List<Registration> getAll() {

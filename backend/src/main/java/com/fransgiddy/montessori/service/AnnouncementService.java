@@ -7,6 +7,8 @@ import com.fransgiddy.montessori.entity.User;
 import com.fransgiddy.montessori.repository.AnnouncementRepository;
 import com.fransgiddy.montessori.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +28,8 @@ public class AnnouncementService {
                 .orElseThrow(() -> new RuntimeException("Author not found with phone: " + authorPhone));
 
         Announcement announcement = Announcement.builder()
-                .title(request.title())
-                .content(request.content())
+                .title(stripHtml(request.title()))
+                .content(stripHtml(request.content()))
                 .type(request.type())
                 .author(author)
                 .published(request.published())
@@ -42,8 +44,8 @@ public class AnnouncementService {
         Announcement announcement = announcementRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Announcement not found with id: " + id));
 
-        announcement.setTitle(request.title());
-        announcement.setContent(request.content());
+        announcement.setTitle(stripHtml(request.title()));
+        announcement.setContent(stripHtml(request.content()));
         announcement.setType(request.type());
         announcement.setPublished(request.published());
 
@@ -87,6 +89,11 @@ public class AnnouncementService {
                 .orElseThrow(() -> new RuntimeException("Announcement not found"));
         a.getMediaUrls().add(mediaUrl);
         return toResponse(announcementRepository.save(a));
+    }
+
+    private static String stripHtml(String input) {
+        if (input == null) return null;
+        return Jsoup.clean(input, Safelist.none());
     }
 
     private AnnouncementResponse toResponse(Announcement announcement) {

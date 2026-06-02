@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public record RegistrationRequest(
         @NotBlank(message = "Parent name is required") String parentName,
         @NotBlank(message = "Phone number is required") String parentPhone,
+        String parentEmail,
         @NotBlank(message = "Child first name is required") String childFirstName,
         @NotBlank(message = "Child last name is required") String childLastName,
         LocalDate childDateOfBirth,

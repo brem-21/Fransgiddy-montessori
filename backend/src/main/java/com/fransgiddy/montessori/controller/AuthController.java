@@ -55,4 +55,10 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> logout() {
         return ResponseEntity.ok(ApiResponse.of("Logged out successfully", null));
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@RequestBody Map<String, String> body) {
+        authService.requestPasswordReset(body.get("phone"));
+        return ResponseEntity.ok(ApiResponse.of("If an account with that number exists, reset instructions have been sent.", null));
+    }
 }

@@ -54,8 +54,15 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:bg-indigo-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:text-sm focus:font-medium"
+      >
+        Skip to main content
+      </a>
       <Navbar />
 
+      <main id="main-content">
       {/* Hero Section */}
       <section className="relative pt-16 overflow-hidden bg-gradient-to-br from-indigo-700 via-indigo-600 to-indigo-500 text-white">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
@@ -95,7 +102,6 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <div className="relative h-16 bg-gradient-to-b from-transparent to-white" />
       </section>
 
       {/* Photo Slideshow */}
@@ -317,6 +323,8 @@ export default function LandingPage() {
           </Button>
         </div>
       </section>
+
+      </main>
 
       {/* Announcement Detail Dialog */}
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>

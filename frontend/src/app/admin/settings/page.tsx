@@ -66,7 +66,25 @@ export default function SettingsPage() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-400">Loading settings...</div>;
+    return (
+      <div className="max-w-xl space-y-8">
+        <div>
+          <div className="h-8 w-32 bg-gray-200 animate-pulse rounded mb-2" />
+          <div className="h-4 w-72 bg-gray-100 animate-pulse rounded" />
+        </div>
+        <div className="border rounded-lg p-6 space-y-5 bg-white shadow-sm">
+          <div className="h-5 w-48 bg-gray-200 animate-pulse rounded" />
+          {[1, 2].map((i) => (
+            <div key={i} className="space-y-2">
+              <div className="h-4 w-28 bg-gray-200 animate-pulse rounded" />
+              <div className="h-10 bg-gray-100 animate-pulse rounded" />
+              <div className="h-3 w-64 bg-gray-100 animate-pulse rounded" />
+            </div>
+          ))}
+        </div>
+        <div className="h-10 w-32 bg-gray-200 animate-pulse rounded" />
+      </div>
+    );
   }
 
   return (
