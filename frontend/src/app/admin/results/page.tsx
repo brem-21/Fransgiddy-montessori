@@ -104,14 +104,14 @@ export default function TeacherResultsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Enter Results</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-ink">Enter Results</h1>
+        <p className="text-ash text-sm mt-1">
           Record student assessment results.
         </p>
       </div>
 
       {/* Entry Form */}
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         <CardHeader>
           <CardTitle className="text-base">New Result Entry</CardTitle>
         </CardHeader>
@@ -225,13 +225,13 @@ export default function TeacherResultsPage() {
             <div className="space-y-1.5">
               <Label htmlFor="remarks">
                 Remarks{" "}
-                <span className="text-gray-400">(optional)</span>
+                <span className="text-ash">(optional)</span>
               </Label>
               <textarea
                 id="remarks"
                 rows={2}
                 placeholder="Optional remarks for the student..."
-                className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                className="flex w-full rounded-none border border-pebble bg-white px-3 py-2 text-sm placeholder:text-ash focus:outline-none focus:ring-2 focus:ring-clay focus:border-transparent resize-none"
                 {...register("remarks")}
               />
             </div>
@@ -244,13 +244,13 @@ export default function TeacherResultsPage() {
       </Card>
 
       {/* My Results Table */}
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         <CardHeader>
           <CardTitle className="text-base">My Entered Results</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {myResults.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">
+            <div className="p-8 text-center text-ash text-sm">
               No results entered yet.
             </div>
           ) : (
@@ -268,22 +268,22 @@ export default function TeacherResultsPage() {
               <TableBody>
                 {myResults.map((r) => (
                   <TableRow key={r.id}>
-                    <TableCell className="font-medium">
+                    <TableCell className="font-bold">
                       {r.studentName}
                     </TableCell>
                     <TableCell className="text-sm">{r.subjectName}</TableCell>
                     <TableCell className="text-sm capitalize">
                       {r.term.toLowerCase()} Term
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500">
+                    <TableCell className="text-sm text-ash">
                       {r.academicYear}
                     </TableCell>
                     <TableCell>
-                      <span className="font-semibold">{r.score}</span>
-                      <span className="text-gray-400 text-xs">/100</span>
+                      <span className="font-bold">{r.score}</span>
+                      <span className="text-ash text-xs">/100</span>
                     </TableCell>
                     <TableCell>
-                      <span className="font-semibold text-indigo-600">
+                      <span className="font-bold text-ink">
                         {r.grade}
                       </span>
                     </TableCell>

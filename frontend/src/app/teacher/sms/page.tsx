@@ -68,18 +68,18 @@ function ContactPicker({
     <div className="space-y-2">
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-gray-400" />
+          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-ash" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name or phone..."
-            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-8 pr-3 py-2 text-sm border border-pebble rounded-none focus:outline-none focus:ring-2 focus:ring-clay"
           />
         </div>
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value as typeof typeFilter)}
-          className="text-sm border border-gray-300 rounded-md px-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="text-sm border border-pebble rounded-none px-2 focus:outline-none focus:ring-2 focus:ring-clay"
         >
           <option value="ALL">All</option>
           <option value="PARENT">Parents</option>
@@ -87,37 +87,37 @@ function ContactPicker({
         </select>
       </div>
 
-      <div className="border border-gray-200 rounded-md overflow-hidden">
+      <div className="border border-pebble rounded-none overflow-hidden">
         <button
           type="button"
           onClick={toggleAll}
-          className="flex items-center gap-2 w-full px-3 py-2 bg-gray-50 border-b border-gray-200 text-xs font-medium text-gray-500 hover:bg-gray-100"
+          className="flex items-center gap-2 w-full px-3 py-2 bg-white border-b border-pebble text-xs font-bold text-ash hover:bg-pebble/20"
         >
           {allChecked
-            ? <CheckSquare className="h-3.5 w-3.5 text-indigo-600" />
-            : <Square className="h-3.5 w-3.5 text-gray-400" />}
+            ? <CheckSquare className="h-3.5 w-3.5 text-ink" />
+            : <Square className="h-3.5 w-3.5 text-ash" />}
           Select all visible ({filtered.length})
         </button>
 
-        <div className="max-h-52 overflow-y-auto divide-y divide-gray-100">
+        <div className="max-h-52 overflow-y-auto divide-y divide-pebble">
           {filtered.length === 0 ? (
-            <p className="text-xs text-gray-400 text-center py-4">No contacts found</p>
+            <p className="text-xs text-ash text-center py-4">No contacts found</p>
           ) : (
             filtered.map((c) => (
               <button
                 key={c.phone}
                 type="button"
                 onClick={() => toggle(c.phone)}
-                className={`flex items-center gap-3 w-full px-3 py-2.5 text-left hover:bg-gray-50 transition-colors ${
-                  selected.has(c.phone) ? "bg-indigo-50" : ""
+                className={`flex items-center gap-3 w-full px-3 py-2.5 text-left hover:bg-white transition-colors ${
+                  selected.has(c.phone) ? "bg-white" : ""
                 }`}
               >
                 {selected.has(c.phone)
-                  ? <CheckSquare className="h-4 w-4 text-indigo-600 shrink-0" />
-                  : <Square className="h-4 w-4 text-gray-300 shrink-0" />}
+                  ? <CheckSquare className="h-4 w-4 text-ink shrink-0" />
+                  : <Square className="h-4 w-4 text-ash shrink-0" />}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">{c.name}</p>
-                  <p className="text-xs text-gray-500">{c.phone}</p>
+                  <p className="text-sm font-bold text-ink truncate">{c.name}</p>
+                  <p className="text-xs text-ash">{c.phone}</p>
                 </div>
                 <span className={`text-xs px-1.5 py-0.5 rounded-full shrink-0 ${
                   c.type === "PARENT" ? "bg-blue-50 text-blue-600" : "bg-green-50 text-green-600"
@@ -130,7 +130,7 @@ function ContactPicker({
         </div>
       </div>
 
-      <p className="text-xs text-gray-400">{selected.size} contact(s) selected</p>
+      <p className="text-xs text-ash">{selected.size} contact(s) selected</p>
     </div>
   );
 }
@@ -140,18 +140,18 @@ function ContactPicker({
 function StatusBadge({ status }: { status: SmsRequestResponse["status"] }) {
   if (status === "PENDING")
     return (
-      <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full text-amber-600 bg-amber-50">
+      <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full text-amber-600 bg-amber-50">
         <Clock className="h-3 w-3" /> Pending
       </span>
     );
   if (status === "APPROVED")
     return (
-      <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full text-green-700 bg-green-50">
+      <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full text-green-700 bg-green-50">
         <CheckCircle className="h-3 w-3" /> Approved & Sent
       </span>
     );
   return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full text-red-600 bg-red-50">
+    <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full text-red-600 bg-red-50">
       <XCircle className="h-3 w-3" /> Rejected
     </span>
   );
@@ -232,8 +232,8 @@ export default function TeacherSmsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">SMS Broadcast</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-ink">SMS Broadcast</h1>
+          <p className="text-ash text-sm mt-1">
             Request an SMS broadcast to parents or teachers. The principal will review and send it.
           </p>
         </div>
@@ -243,11 +243,11 @@ export default function TeacherSmsPage() {
       </div>
 
       {/* ── My requests ── */}
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         {loadingRequests ? (
-          <div className="p-8 text-center text-gray-400">Loading...</div>
+          <div className="p-8 text-center text-ash">Loading...</div>
         ) : myRequests.length === 0 ? (
-          <div className="p-12 text-center text-gray-400 text-sm">
+          <div className="p-12 text-center text-ash text-sm">
             You haven't submitted any SMS requests yet.
           </div>
         ) : (
@@ -264,17 +264,17 @@ export default function TeacherSmsPage() {
             <TableBody>
               {myRequests.map((req) => (
                 <TableRow key={req.id}>
-                  <TableCell className="text-sm font-medium text-gray-800 max-w-xs">
+                  <TableCell className="text-sm font-bold text-ink max-w-xs">
                     <p className="truncate">{req.message}</p>
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className="text-xs uppercase">{req.recipientType}</Badge>
                   </TableCell>
                   <TableCell><StatusBadge status={req.status} /></TableCell>
-                  <TableCell className="text-sm text-gray-500">
+                  <TableCell className="text-sm text-ash">
                     {req.reviewedByName ?? "—"}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-500">
+                  <TableCell className="text-sm text-ash">
                     {new Date(req.createdAt).toLocaleDateString("en-GB")}
                   </TableCell>
                 </TableRow>
@@ -289,12 +289,12 @@ export default function TeacherSmsPage() {
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-indigo-600" />
+              <MessageSquare className="h-5 w-5 text-ink" />
               Request SMS Broadcast
             </DialogTitle>
           </DialogHeader>
 
-          <p className="text-sm text-gray-500 -mt-1">
+          <p className="text-sm text-ash -mt-1">
             Your message will be reviewed by the principal before sending.
           </p>
 
@@ -313,16 +313,16 @@ export default function TeacherSmsPage() {
                     key={opt.value}
                     type="button"
                     onClick={() => setRecipientType(opt.value)}
-                    className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition-colors text-left ${
+                    className={`flex items-center gap-2 p-3 rounded-none border text-sm font-bold transition-colors text-left ${
                       recipientType === opt.value
-                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                        ? "border-clay bg-white text-ink"
+                        : "border-pebble text-ash hover:border-pebble"
                     }`}
                   >
                     {opt.icon}
                     <span className="flex-1">{opt.label}</span>
                     {opt.count != null && contacts.length > 0 && (
-                      <span className="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full">
+                      <span className="text-xs bg-pebble/20 text-ash px-1.5 py-0.5 rounded-full">
                         {opt.count}
                       </span>
                     )}
@@ -351,9 +351,9 @@ export default function TeacherSmsPage() {
                 placeholder="Type your message here..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                className="flex w-full rounded-none border border-pebble bg-white px-3 py-2 text-sm placeholder:text-ash focus:outline-none focus:ring-2 focus:ring-clay focus:border-transparent resize-none"
               />
-              <div className="flex justify-between text-xs text-gray-400">
+              <div className="flex justify-between text-xs text-ash">
                 <span>{message.length} characters</span>
                 <span>{Math.ceil(message.length / 160)} SMS credit(s)</span>
               </div>

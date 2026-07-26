@@ -84,18 +84,18 @@ function ContactPicker({
     <div className="space-y-2">
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-gray-400" />
+          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-ash" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name or phone..."
-            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-8 pr-3 py-2 text-sm border border-pebble rounded-none focus:outline-none focus:ring-2 focus:ring-clay"
           />
         </div>
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value as typeof typeFilter)}
-          className="text-sm border border-gray-300 rounded-md px-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="text-sm border border-pebble rounded-none px-2 focus:outline-none focus:ring-2 focus:ring-clay"
         >
           <option value="ALL">All</option>
           <option value="PARENT">Parents</option>
@@ -103,38 +103,38 @@ function ContactPicker({
         </select>
       </div>
 
-      <div className="border border-gray-200 rounded-md overflow-hidden">
+      <div className="border border-pebble rounded-none overflow-hidden">
         {/* Select-all header */}
         <button
           type="button"
           onClick={toggleAll}
-          className="flex items-center gap-2 w-full px-3 py-2 bg-gray-50 border-b border-gray-200 text-xs font-medium text-gray-500 hover:bg-gray-100"
+          className="flex items-center gap-2 w-full px-3 py-2 bg-white border-b border-pebble text-xs font-bold text-ash hover:bg-pebble/20"
         >
           {allChecked
-            ? <CheckSquare className="h-3.5 w-3.5 text-indigo-600" />
-            : <Square className="h-3.5 w-3.5 text-gray-400" />}
+            ? <CheckSquare className="h-3.5 w-3.5 text-ink" />
+            : <Square className="h-3.5 w-3.5 text-ash" />}
           Select all visible ({filtered.length})
         </button>
 
-        <div className="max-h-52 overflow-y-auto divide-y divide-gray-100">
+        <div className="max-h-52 overflow-y-auto divide-y divide-pebble">
           {filtered.length === 0 ? (
-            <p className="text-xs text-gray-400 text-center py-4">No contacts found</p>
+            <p className="text-xs text-ash text-center py-4">No contacts found</p>
           ) : (
             filtered.map((c) => (
               <button
                 key={c.phone}
                 type="button"
                 onClick={() => toggle(c.phone)}
-                className={`flex items-center gap-3 w-full px-3 py-2.5 text-left hover:bg-gray-50 transition-colors ${
-                  selected.has(c.phone) ? "bg-indigo-50" : ""
+                className={`flex items-center gap-3 w-full px-3 py-2.5 text-left hover:bg-white transition-colors ${
+                  selected.has(c.phone) ? "bg-white" : ""
                 }`}
               >
                 {selected.has(c.phone)
-                  ? <CheckSquare className="h-4 w-4 text-indigo-600 shrink-0" />
-                  : <Square className="h-4 w-4 text-gray-300 shrink-0" />}
+                  ? <CheckSquare className="h-4 w-4 text-ink shrink-0" />
+                  : <Square className="h-4 w-4 text-ash shrink-0" />}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">{c.name}</p>
-                  <p className="text-xs text-gray-500">{c.phone}</p>
+                  <p className="text-sm font-bold text-ink truncate">{c.name}</p>
+                  <p className="text-xs text-ash">{c.phone}</p>
                 </div>
                 <span className={`text-xs px-1.5 py-0.5 rounded-full shrink-0 ${
                   c.type === "PARENT"
@@ -149,7 +149,7 @@ function ContactPicker({
         </div>
       </div>
 
-      <p className="text-xs text-gray-400">{selected.size} contact(s) selected</p>
+      <p className="text-xs text-ash">{selected.size} contact(s) selected</p>
     </div>
   );
 }
@@ -179,19 +179,19 @@ function SmsRequestRow({
 
   return (
     <TableRow>
-      <TableCell className="text-sm font-medium text-gray-800 max-w-xs">
+      <TableCell className="text-sm font-bold text-ink max-w-xs">
         <p className="truncate">{req.message}</p>
       </TableCell>
-      <TableCell className="text-sm text-gray-500">{req.requestedByName}</TableCell>
+      <TableCell className="text-sm text-ash">{req.requestedByName}</TableCell>
       <TableCell>
         <Badge variant="secondary" className="text-xs uppercase">{req.recipientType}</Badge>
       </TableCell>
       <TableCell>
-        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${statusColor}`}>
+        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${statusColor}`}>
           {statusIcon} {req.status}
         </span>
       </TableCell>
-      <TableCell className="text-xs text-gray-400">
+      <TableCell className="text-xs text-ash">
         {new Date(req.createdAt).toLocaleDateString("en-GB")}
       </TableCell>
       {req.status === "PENDING" && (
@@ -218,7 +218,7 @@ function SmsRequestRow({
         </TableCell>
       )}
       {req.status !== "PENDING" && (
-        <TableCell className="text-right text-xs text-gray-400">
+        <TableCell className="text-right text-xs text-ash">
           {req.reviewedByName ? `by ${req.reviewedByName}` : "—"}
         </TableCell>
       )}
@@ -401,8 +401,8 @@ export default function AdminContentPage() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Content Management</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage announcements, news and events.</p>
+          <h1 className="text-2xl font-bold text-ink">Content Management</h1>
+          <p className="text-ash text-sm mt-1">Manage announcements, news and events.</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={openSmsDialog}>
@@ -415,11 +415,11 @@ export default function AdminContentPage() {
       </div>
 
       {/* ── Announcements table ── */}
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Loading...</div>
+          <div className="p-8 text-center text-ash">Loading...</div>
         ) : announcements.length === 0 ? (
-          <div className="p-12 text-center text-gray-400">No announcements yet.</div>
+          <div className="p-12 text-center text-ash">No announcements yet.</div>
         ) : (
           <Table>
             <TableHeader>
@@ -435,10 +435,10 @@ export default function AdminContentPage() {
             <TableBody>
               {announcements.map((a) => (
                 <TableRow key={a.id}>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-bold">
                     {a.title}
                     {a.mediaUrls && a.mediaUrls.length > 0 && (
-                      <span className="ml-2 text-xs text-gray-400">📎 {a.mediaUrls.length}</span>
+                      <span className="ml-2 text-xs text-ash">📎 {a.mediaUrls.length}</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -449,8 +449,8 @@ export default function AdminContentPage() {
                       ? <Badge variant="default" className="text-xs">Published</Badge>
                       : <Badge variant="outline" className="text-xs">Draft</Badge>}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-500">{a.authorName}</TableCell>
-                  <TableCell className="text-sm text-gray-500">
+                  <TableCell className="text-sm text-ash">{a.authorName}</TableCell>
+                  <TableCell className="text-sm text-ash">
                     {new Date(a.createdAt).toLocaleDateString("en-GB")}
                   </TableCell>
                   <TableCell className="text-right">
@@ -477,16 +477,16 @@ export default function AdminContentPage() {
       {/* ── Teacher SMS requests ── */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <h2 className="text-lg font-semibold text-gray-800">Teacher SMS Requests</h2>
+          <h2 className="text-lg font-bold text-ink">Teacher SMS Requests</h2>
           {pendingCount > 0 && (
-            <span className="text-xs font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
               {pendingCount} pending
             </span>
           )}
         </div>
-        <Card className="border-0 shadow-sm">
+        <Card className="  ">
           {smsRequests.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">No SMS requests from teachers.</div>
+            <div className="p-8 text-center text-ash text-sm">No SMS requests from teachers.</div>
           ) : (
             <Table>
               <TableHeader>
@@ -520,7 +520,7 @@ export default function AdminContentPage() {
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-indigo-600" />
+              <MessageSquare className="h-5 w-5 text-ink" />
               Send SMS Broadcast
             </DialogTitle>
           </DialogHeader>
@@ -540,16 +540,16 @@ export default function AdminContentPage() {
                     key={opt.value}
                     type="button"
                     onClick={() => setRecipientType(opt.value)}
-                    className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition-colors text-left ${
+                    className={`flex items-center gap-2 p-3 rounded-none border text-sm font-bold transition-colors text-left ${
                       recipientType === opt.value
-                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                        ? "border-clay bg-white text-ink"
+                        : "border-pebble text-ash hover:border-pebble"
                     }`}
                   >
                     {opt.icon}
                     <span className="flex-1">{opt.label}</span>
                     {opt.count != null && (
-                      <span className="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full">
+                      <span className="text-xs bg-pebble/20 text-ash px-1.5 py-0.5 rounded-full">
                         {opt.count}
                       </span>
                     )}
@@ -578,9 +578,9 @@ export default function AdminContentPage() {
                 placeholder="Type your message here..."
                 value={smsMessage}
                 onChange={(e) => setSmsMessage(e.target.value)}
-                className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                className="flex w-full rounded-none border border-pebble bg-white px-3 py-2 text-sm placeholder:text-ash focus:outline-none focus:ring-2 focus:ring-clay focus:border-transparent resize-none"
               />
-              <div className="flex justify-between text-xs text-gray-400">
+              <div className="flex justify-between text-xs text-ash">
                 <span>{smsMessage.length} characters</span>
                 <span>{Math.ceil(smsMessage.length / 160)} SMS credit(s)</span>
               </div>
@@ -588,9 +588,9 @@ export default function AdminContentPage() {
 
             {/* Preview */}
             {recipientType !== "CUSTOM" && recipientCounts && (
-              <Card className="bg-indigo-50 border-indigo-100">
+              <Card className="bg-white border-pebble">
                 <CardContent className="py-3 px-4">
-                  <p className="text-sm text-indigo-700">
+                  <p className="text-sm text-ink">
                     This will send to{" "}
                     <strong>
                       {recipientType === "ALL" ? recipientCounts.all
@@ -636,7 +636,7 @@ export default function AdminContentPage() {
                 id="content"
                 rows={5}
                 placeholder="Write your announcement here..."
-                className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                className="flex w-full rounded-none border border-pebble bg-white px-3 py-2 text-sm placeholder:text-ash focus:outline-none focus:ring-2 focus:ring-clay focus:border-transparent resize-none"
                 {...register("content")}
               />
               {errors.content && <p className="text-xs text-red-600">{errors.content.message}</p>}
@@ -673,11 +673,11 @@ export default function AdminContentPage() {
                         id="published"
                         checked={field.value}
                         onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        className="h-4 w-4 rounded border-pebble text-ink focus:ring-clay"
                       />
                     )}
                   />
-                  <label htmlFor="published" className="text-sm text-gray-600">Yes, publish now</label>
+                  <label htmlFor="published" className="text-sm text-ash">Yes, publish now</label>
                 </div>
               </div>
             </div>
@@ -689,10 +689,10 @@ export default function AdminContentPage() {
                 multiple
                 accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx"
                 onChange={(e) => setSelectedFiles(Array.from(e.target.files || []))}
-                className="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                className="block w-full text-sm text-ash file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:bg-white file:text-ink hover:file:bg-ink"
               />
               {selectedFiles.length > 0 && (
-                <ul className="text-xs text-gray-500 space-y-0.5 mt-1">
+                <ul className="text-xs text-ash space-y-0.5 mt-1">
                   {selectedFiles.map((f, i) => (
                     <li key={i}>📎 {f.name} ({(f.size / 1024).toFixed(0)} KB)</li>
                   ))}

@@ -18,15 +18,15 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-pebble">
+      <div className="max-w-page mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <GraduationCap className="h-7 w-7 text-indigo-600" />
-            <span className="font-bold text-gray-900 text-lg leading-tight">
+            <GraduationCap className="h-7 w-7 text-ink" />
+            <span className="font-bold text-ink text-lg leading-tight tracking-tight">
               Fransgiddy<br className="hidden sm:block" />
-              <span className="text-indigo-600 text-sm font-medium"> Royal School</span>
+              <span className="text-ash text-sm font-normal"> Royal School</span>
             </span>
           </Link>
 
@@ -36,7 +36,7 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors"
+                className="text-sm font-bold text-ink hover:underline transition-colors"
               >
                 {link.label}
               </Link>
@@ -52,7 +52,7 @@ export function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-gray-100"
+            className="md:hidden p-2 rounded-pill text-ink hover:bg-pebble/20 transition-transform active:scale-90"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -64,7 +64,7 @@ export function Navbar() {
       {/* Mobile Dropdown */}
       <div
         className={cn(
-          "md:hidden bg-white border-t border-gray-100 shadow-md transition-all duration-200 overflow-hidden",
+          "md:hidden bg-white border-t border-pebble transition-all duration-200 overflow-hidden",
           mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
       >
@@ -73,7 +73,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-gray-700 hover:text-indigo-600 py-1"
+              className="text-sm font-bold text-ink hover:underline py-1"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}

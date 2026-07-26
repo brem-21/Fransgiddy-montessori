@@ -142,21 +142,21 @@ export default function AdminClassesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Class Management</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-ink">Class Management</h1>
+          <p className="text-ash text-sm mt-1">
             Create classes and assign students and teachers.
           </p>
         </div>
-        <Button onClick={() => { reset(); setCreateOpen(true); }} className="bg-purple-600 hover:bg-purple-700">
+        <Button onClick={() => { reset(); setCreateOpen(true); }} className="bg-clay hover:bg-ink/80">
           <Plus className="h-4 w-4 mr-1" /> New Class
         </Button>
       </div>
 
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Loading...</div>
+          <div className="p-8 text-center text-ash">Loading...</div>
         ) : classes.length === 0 ? (
-          <div className="p-12 text-center text-gray-400">No classes yet. Create one to get started.</div>
+          <div className="p-12 text-center text-ash">No classes yet. Create one to get started.</div>
         ) : (
           <Table>
             <TableHeader>
@@ -171,11 +171,11 @@ export default function AdminClassesPage() {
             <TableBody>
               {classes.map((c) => (
                 <TableRow key={c.id}>
-                  <TableCell className="font-semibold text-purple-800">{c.name}</TableCell>
-                  <TableCell className="text-gray-500 text-sm">{c.description || "—"}</TableCell>
+                  <TableCell className="font-bold text-ink">{c.name}</TableCell>
+                  <TableCell className="text-ash text-sm">{c.description || "—"}</TableCell>
                   <TableCell>
                     {c.teacherNames.length === 0 ? (
-                      <span className="text-gray-400 text-sm">None</span>
+                      <span className="text-ash text-sm">None</span>
                     ) : (
                       <div className="flex flex-wrap gap-1">
                         {c.teacherNames.map((name) => (
@@ -228,7 +228,7 @@ export default function AdminClassesPage() {
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-              <Button type="submit" disabled={submitting} className="bg-purple-600 hover:bg-purple-700">
+              <Button type="submit" disabled={submitting} className="bg-clay hover:bg-ink/80">
                 {submitting ? "Creating..." : "Create"}
               </Button>
             </DialogFooter>
@@ -244,21 +244,21 @@ export default function AdminClassesPage() {
           </DialogHeader>
           <div className="space-y-2 max-h-64 overflow-y-auto">
             {teachers.map((t) => (
-              <label key={t.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-purple-50 cursor-pointer">
+              <label key={t.id} className="flex items-center gap-3 p-2 rounded-none hover:bg-pebble/10 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={selectedTeacherIds.includes(t.id)}
                   onChange={() => toggleId(t.id, selectedTeacherIds, setSelectedTeacherIds)}
-                  className="h-4 w-4 rounded border-gray-300 text-purple-600"
+                  className="h-4 w-4 rounded border-pebble text-clay"
                 />
-                <span className="text-sm font-medium">{t.name}</span>
-                <span className="text-xs text-gray-400">{t.phone}</span>
+                <span className="text-sm font-bold">{t.name}</span>
+                <span className="text-xs text-ash">{t.phone}</span>
               </label>
             ))}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setAssignTeachersOpen(false)}>Cancel</Button>
-            <Button onClick={handleAssignTeachers} className="bg-purple-600 hover:bg-purple-700">Save</Button>
+            <Button onClick={handleAssignTeachers} className="bg-clay hover:bg-ink/80">Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -269,24 +269,24 @@ export default function AdminClassesPage() {
           <DialogHeader>
             <DialogTitle>Assign Students to {selectedClass?.name}</DialogTitle>
           </DialogHeader>
-          <p className="text-xs text-gray-500 -mt-2">Assigning a student moves them to this class.</p>
+          <p className="text-xs text-ash -mt-2">Assigning a student moves them to this class.</p>
           <div className="space-y-2 max-h-64 overflow-y-auto">
             {students.map((s) => (
-              <label key={s.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-purple-50 cursor-pointer">
+              <label key={s.id} className="flex items-center gap-3 p-2 rounded-none hover:bg-pebble/10 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={selectedStudentIds.includes(s.id)}
                   onChange={() => toggleId(s.id, selectedStudentIds, setSelectedStudentIds)}
-                  className="h-4 w-4 rounded border-gray-300 text-purple-600"
+                  className="h-4 w-4 rounded border-pebble text-clay"
                 />
-                <span className="text-sm font-medium">{s.firstName} {s.lastName}</span>
+                <span className="text-sm font-bold">{s.firstName} {s.lastName}</span>
                 <Badge variant="secondary" className="text-xs">{s.className}</Badge>
               </label>
             ))}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setAssignStudentsOpen(false)}>Cancel</Button>
-            <Button onClick={handleAssignStudents} className="bg-purple-600 hover:bg-purple-700">Save</Button>
+            <Button onClick={handleAssignStudents} className="bg-clay hover:bg-ink/80">Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

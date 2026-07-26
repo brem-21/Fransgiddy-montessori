@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -51,19 +52,24 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="w-full max-w-md"
+      >
         <div className="mb-6 text-center">
-          <Link href="/login" className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:underline">
+          <Link href="/login" className="inline-flex items-center gap-1 text-sm text-ink hover:underline">
             <ArrowLeft className="h-3.5 w-3.5" /> Back to Login
           </Link>
         </div>
 
-        <Card className="shadow-lg border-0">
+        <Card className="  ">
           <CardHeader className="text-center pb-4">
             <div className="flex justify-center mb-3">
-              <div className="bg-indigo-100 rounded-full p-3">
-                <GraduationCap className="h-8 w-8 text-indigo-600" />
+              <div className="bg-ink rounded-full p-3">
+                <GraduationCap className="h-8 w-8 text-white" />
               </div>
             </div>
             <CardTitle className="text-2xl">Reset Password</CardTitle>
@@ -76,8 +82,8 @@ export default function ForgotPasswordPage() {
             {submitted ? (
               <div className="text-center py-4 space-y-3">
                 <CheckCircle className="h-12 w-12 text-green-500 mx-auto" />
-                <p className="font-medium text-gray-900">Request Sent</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-bold text-ink">Request Sent</p>
+                <p className="text-sm text-ash">
                   If an account exists for that number, you will receive an SMS
                   shortly with instructions to reset your password.
                 </p>
@@ -107,9 +113,9 @@ export default function ForgotPasswordPage() {
                   {isLoading ? "Sending..." : "Send Reset Instructions"}
                 </Button>
 
-                <p className="text-xs text-center text-gray-400 pt-1">
+                <p className="text-xs text-center text-ash pt-1">
                   Can&apos;t access your phone?{" "}
-                  <a href="mailto:info@fransgiddy.edu.gh" className="text-indigo-600 hover:underline">
+                  <a href="mailto:info@fransgiddy.edu.gh" className="text-ink hover:underline">
                     Contact an administrator
                   </a>
                 </p>
@@ -117,7 +123,7 @@ export default function ForgotPasswordPage() {
             )}
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
     </div>
   );
 }

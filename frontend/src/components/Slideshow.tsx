@@ -111,7 +111,7 @@ export function Slideshow() {
 
   return (
     <section
-      className="relative w-full h-[480px] sm:h-[580px] overflow-hidden bg-indigo-900 select-none"
+      className="relative w-full h-[480px] sm:h-[580px] overflow-hidden bg-ink select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-label="Photo gallery slideshow"
@@ -150,7 +150,7 @@ export function Slideshow() {
       {/* Progress bar */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
         <div
-          className="h-full bg-indigo-400 transition-none"
+          className="h-full bg-clay transition-none"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -162,7 +162,7 @@ export function Slideshow() {
             key={i}
             onClick={() => goTo(i)}
             aria-label={`Go to slide ${i + 1}`}
-            className={`rounded-full transition-all duration-200 ${
+            className={`rounded-full transition-all duration-200 active:scale-90 ${
               i === current
                 ? "w-6 h-2 bg-white"
                 : "w-2 h-2 bg-white/40 hover:bg-white/70"
@@ -175,14 +175,14 @@ export function Slideshow() {
       <button
         onClick={() => { prev(); setProgress(0); }}
         aria-label="Previous slide"
-        className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors backdrop-blur-sm"
+        className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition-all active:scale-90 backdrop-blur-sm"
       >
         <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
       </button>
       <button
         onClick={() => { next(); setProgress(0); }}
         aria-label="Next slide"
-        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors backdrop-blur-sm"
+        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition-all active:scale-90 backdrop-blur-sm"
       >
         <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
       </button>

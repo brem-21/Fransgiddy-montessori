@@ -145,14 +145,14 @@ export default function AdminTranscriptPage() {
   return (
     <div className="space-y-6">
       <div className="no-print">
-        <h1 className="text-2xl font-bold text-gray-900">Student Transcript</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-ink">Student Transcript</h1>
+        <p className="text-ash text-sm mt-1">
           Generate and export a full academic transcript for any student.
         </p>
       </div>
 
       {/* Student selector */}
-      <Card className="border-0 shadow-sm no-print">
+      <Card className="   no-print">
         <CardHeader>
           <CardTitle className="text-base">Select Student</CardTitle>
         </CardHeader>
@@ -208,55 +208,55 @@ export default function AdminTranscriptPage() {
         <div
           ref={printRef}
           id="printable-transcript"
-          className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm max-w-4xl mx-auto"
+          className="bg-white border border-pebble rounded-none p-8   max-w-4xl mx-auto"
         >
           {/* School Header */}
-          <div className="text-center border-b-2 border-indigo-600 pb-6 mb-6">
+          <div className="text-center border-b-2 border-ink pb-6 mb-6">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <GraduationCap className="h-9 w-9 text-indigo-600" />
-              <h1 className="text-2xl font-bold text-indigo-700">Fransgiddy Royal School</h1>
+              <GraduationCap className="h-9 w-9 text-ink" />
+              <h1 className="text-2xl font-bold text-ink">Fransgiddy Royal School</h1>
             </div>
-            <p className="text-gray-500 text-sm">Nurturing Curious Minds — Excellence in Montessori Education</p>
-            <p className="text-gray-400 text-xs mt-1">123 School Lane, Accra, Ghana | +233 20 000 0000</p>
+            <p className="text-ash text-sm">Nurturing Curious Minds — Excellence in Montessori Education</p>
+            <p className="text-ash text-xs mt-1">123 School Lane, Accra, Ghana | +233 20 000 0000</p>
           </div>
 
           {/* Document title */}
           <div className="text-center mb-6">
-            <h2 className="text-xl font-bold text-gray-800 uppercase tracking-widest">
+            <h2 className="text-xl font-bold text-ink uppercase tracking-widest">
               Student Academic Transcript
             </h2>
-            <p className="text-xs text-gray-400 mt-1">Official Academic Record</p>
+            <p className="text-xs text-ash mt-1">Official Academic Record</p>
           </div>
 
           {/* Student Info */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-8 p-5 bg-gray-50 rounded-lg border border-gray-100">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-8 p-5 bg-white rounded-none border border-pebble">
             <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Student Name</span>
-              <p className="font-bold text-gray-900 text-base">{transcript.studentName}</p>
+              <span className="text-xs text-ash uppercase tracking-wide">Student Name</span>
+              <p className="font-bold text-ink text-base">{transcript.studentName}</p>
             </div>
             <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Class</span>
-              <p className="font-semibold text-gray-900">{transcript.className}</p>
+              <span className="text-xs text-ash uppercase tracking-wide">Class</span>
+              <p className="font-bold text-ink">{transcript.className}</p>
             </div>
             <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Parent / Guardian</span>
-              <p className="font-semibold text-gray-900">{transcript.parentName}</p>
+              <span className="text-xs text-ash uppercase tracking-wide">Parent / Guardian</span>
+              <p className="font-bold text-ink">{transcript.parentName}</p>
             </div>
             <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Parent Phone</span>
-              <p className="font-semibold text-gray-900">{transcript.parentPhone}</p>
+              <span className="text-xs text-ash uppercase tracking-wide">Parent Phone</span>
+              <p className="font-bold text-ink">{transcript.parentPhone}</p>
             </div>
             <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Enrollment Date</span>
-              <p className="font-semibold text-gray-900">
+              <span className="text-xs text-ash uppercase tracking-wide">Enrollment Date</span>
+              <p className="font-bold text-ink">
                 {new Date(transcript.enrollmentDate).toLocaleDateString("en-GH", {
                   day: "numeric", month: "long", year: "numeric",
                 })}
               </p>
             </div>
             <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Terms on Record</span>
-              <p className="font-semibold text-gray-900">{transcript.terms.length}</p>
+              <span className="text-xs text-ash uppercase tracking-wide">Terms on Record</span>
+              <p className="font-bold text-ink">{transcript.terms.length}</p>
             </div>
           </div>
 
@@ -267,8 +267,8 @@ export default function AdminTranscriptPage() {
 
           {/* Cumulative Summary */}
           {transcript.terms.length > 0 && (
-            <div className="mt-8 border-t-2 border-indigo-600 pt-6">
-              <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wide mb-4">
+            <div className="mt-8 border-t-2 border-ink pt-6">
+              <h3 className="text-sm font-bold text-ink uppercase tracking-wide mb-4">
                 Cumulative Academic Summary
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -289,18 +289,18 @@ export default function AdminTranscriptPage() {
           )}
 
           {/* Signature lines */}
-          <div className="mt-10 pt-6 border-t border-gray-200 grid grid-cols-2 gap-12">
+          <div className="mt-10 pt-6 border-t border-pebble grid grid-cols-2 gap-12">
             <div>
-              <div className="h-10 border-b border-gray-400 mb-1" />
-              <p className="text-xs text-gray-400">Head Teacher&apos;s Signature &amp; Date</p>
+              <div className="h-10 border-b border-pebble mb-1" />
+              <p className="text-xs text-ash">Head Teacher&apos;s Signature &amp; Date</p>
             </div>
             <div>
-              <div className="h-10 border-b border-gray-400 mb-1" />
-              <p className="text-xs text-gray-400">School Stamp &amp; Date</p>
+              <div className="h-10 border-b border-pebble mb-1" />
+              <p className="text-xs text-ash">School Stamp &amp; Date</p>
             </div>
           </div>
 
-          <p className="text-center text-xs text-gray-400 mt-6">
+          <p className="text-center text-xs text-ash mt-6">
             This is an official academic transcript of Fransgiddy Royal School. Any alteration renders it invalid.
           </p>
         </div>
@@ -340,18 +340,18 @@ function TermSection({ term }: { term: TranscriptTerm }) {
   return (
     <div className="mb-8">
       {/* Term header */}
-      <div className="flex items-center justify-between bg-indigo-50 border border-indigo-100 rounded-lg px-4 py-2.5 mb-3">
+      <div className="flex items-center justify-between bg-white border border-pebble rounded-none px-4 py-2.5 mb-3">
         <div>
-          <span className="text-sm font-bold text-indigo-800">
+          <span className="text-sm font-bold text-ink">
             {termLabel[term.term] || term.term}
           </span>
-          <span className="text-xs text-indigo-500 ml-2">— {term.academicYear}</span>
+          <span className="text-xs text-ash ml-2">— {term.academicYear}</span>
         </div>
-        <div className="flex items-center gap-4 text-xs text-indigo-700">
+        <div className="flex items-center gap-4 text-xs text-ink">
           <span>
             Position:{" "}
             <strong>{ordinal(term.position)}</strong>
-            <span className="text-indigo-400"> / {term.totalStudents} students</span>
+            <span className="text-ash"> / {term.totalStudents} students</span>
           </span>
         </div>
       </div>
@@ -359,27 +359,27 @@ function TermSection({ term }: { term: TranscriptTerm }) {
       {/* Subjects table */}
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-50">
-            <TableHead className="font-semibold text-gray-700 w-[40%]">Subject</TableHead>
-            <TableHead className="font-semibold text-gray-700 text-center w-[15%]">Score / 100</TableHead>
-            <TableHead className="font-semibold text-gray-700 text-center w-[10%]">Grade</TableHead>
-            <TableHead className="font-semibold text-gray-700">Remarks</TableHead>
+          <TableRow className="bg-white">
+            <TableHead className="font-bold text-ink w-[40%]">Subject</TableHead>
+            <TableHead className="font-bold text-ink text-center w-[15%]">Score / 100</TableHead>
+            <TableHead className="font-bold text-ink text-center w-[10%]">Grade</TableHead>
+            <TableHead className="font-bold text-ink">Remarks</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {term.subjects.map((s) => (
             <TableRow key={s.subjectName}>
-              <TableCell className="font-medium">{s.subjectName}</TableCell>
+              <TableCell className="font-bold">{s.subjectName}</TableCell>
               <TableCell className="text-center">{s.score.toFixed(1)}</TableCell>
               <TableCell className={`text-center ${gradeColor(s.grade)}`}>{s.grade}</TableCell>
-              <TableCell className="text-sm text-gray-500">{s.remarks || "—"}</TableCell>
+              <TableCell className="text-sm text-ash">{s.remarks || "—"}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
       {/* Term summary bar */}
-      <div className="flex flex-wrap gap-6 mt-3 px-3 py-2.5 bg-indigo-600 text-white rounded-lg text-sm">
+      <div className="flex flex-wrap gap-6 mt-3 px-3 py-2.5 bg-clay text-white rounded-none text-sm">
         <span>
           Total Score: <strong>{term.totalScore.toFixed(1)}</strong>
         </span>
@@ -399,9 +399,9 @@ function TermSection({ term }: { term: TranscriptTerm }) {
 
 function SummaryStat({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="text-center p-3 bg-indigo-50 rounded-lg border border-indigo-100">
-      <p className="text-xs text-gray-500 uppercase mb-1">{label}</p>
-      <p className={`text-lg font-bold ${highlight ? "text-indigo-700" : "text-gray-900"}`}>{value}</p>
+    <div className="text-center p-3 bg-white rounded-none border border-pebble">
+      <p className="text-xs text-ash uppercase mb-1">{label}</p>
+      <p className={`text-lg font-bold ${highlight ? "text-ink" : "text-ink"}`}>{value}</p>
     </div>
   );
 }

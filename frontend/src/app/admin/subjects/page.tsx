@@ -119,8 +119,8 @@ export default function SubjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Subjects</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-ink">Subjects</h1>
+          <p className="text-ash text-sm mt-1">
             Manage subjects available for result entry across all classes.
           </p>
         </div>
@@ -135,10 +135,10 @@ export default function SubjectsPage() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setFilterClass("")}
-            className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
+            className={`px-3 py-1 rounded-full text-sm font-bold border transition-colors ${
               filterClass === ""
-                ? "bg-indigo-600 text-white border-indigo-600"
-                : "text-gray-600 border-gray-300 hover:border-indigo-400"
+                ? "bg-clay text-white border-ink"
+                : "text-ash border-pebble hover:border-ink"
             }`}
           >
             All
@@ -147,10 +147,10 @@ export default function SubjectsPage() {
             <button
               key={cl}
               onClick={() => setFilterClass(cl)}
-              className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
+              className={`px-3 py-1 rounded-full text-sm font-bold border transition-colors ${
                 filterClass === cl
-                  ? "bg-indigo-600 text-white border-indigo-600"
-                  : "text-gray-600 border-gray-300 hover:border-indigo-400"
+                  ? "bg-clay text-white border-ink"
+                  : "text-ash border-pebble hover:border-ink"
               }`}
             >
               {cl}
@@ -159,10 +159,10 @@ export default function SubjectsPage() {
         </div>
       )}
 
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <BookOpen className="h-4 w-4 text-indigo-500" />
+            <BookOpen className="h-4 w-4 text-ash" />
             {filtered.length} subject{filtered.length !== 1 ? "s" : ""}
             {filterClass && ` in ${filterClass}`}
           </CardTitle>
@@ -171,27 +171,27 @@ export default function SubjectsPage() {
           {loading ? (
             <div className="space-y-2 p-6">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-10 bg-gray-100 animate-pulse rounded" />
+                <div key={i} className="h-10 bg-pebble/20 animate-pulse rounded" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-16 text-gray-400">
+            <div className="text-center py-16 text-ash">
               <BookOpen className="h-10 w-10 mx-auto mb-3 opacity-30" />
               <p>No subjects yet. Click <strong>Add Subject</strong> to get started.</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold text-gray-700">Subject Name</TableHead>
-                  <TableHead className="font-semibold text-gray-700">Class Level</TableHead>
+                <TableRow className="bg-white">
+                  <TableHead className="font-bold text-ink">Subject Name</TableHead>
+                  <TableHead className="font-bold text-ink">Class Level</TableHead>
                   <TableHead className="w-28" />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filtered.map((s) => (
                   <TableRow key={s.id}>
-                    <TableCell className="font-medium">{s.name}</TableCell>
+                    <TableCell className="font-bold">{s.name}</TableCell>
                     <TableCell>
                       <Badge variant="secondary">{s.classLevel}</Badge>
                     </TableCell>
@@ -201,7 +201,7 @@ export default function SubjectsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openEdit(s)}
-                          className="h-8 w-8 p-0 text-gray-500 hover:text-indigo-600"
+                          className="h-8 w-8 p-0 text-ash hover:text-ink"
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
@@ -210,7 +210,7 @@ export default function SubjectsPage() {
                           size="sm"
                           onClick={() => handleDelete(s.id)}
                           disabled={deletingId === s.id}
-                          className="h-8 w-8 p-0 text-gray-500 hover:text-red-600"
+                          className="h-8 w-8 p-0 text-ash hover:text-red-600"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>

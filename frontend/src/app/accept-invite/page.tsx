@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -76,10 +77,10 @@ function AcceptInviteForm() {
     return (
       <div className="flex flex-col items-center text-center py-8">
         <AlertCircle className="h-12 w-12 text-red-400 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <h3 className="text-lg font-bold text-ink mb-2">
           Invalid Invitation Link
         </h3>
-        <p className="text-gray-500 text-sm mb-6">
+        <p className="text-ash text-sm mb-6">
           This link is missing the required invitation token. Please request a
           new invitation from your administrator.
         </p>
@@ -94,10 +95,10 @@ function AcceptInviteForm() {
     return (
       <div className="flex flex-col items-center text-center py-8">
         <CheckCircle className="h-12 w-12 text-green-500 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <h3 className="text-lg font-bold text-ink mb-2">
           Account Created!
         </h3>
-        <p className="text-gray-500 text-sm mb-6">
+        <p className="text-ash text-sm mb-6">
           Your account has been set up successfully. You can now sign in.
         </p>
         <Button asChild>
@@ -158,13 +159,18 @@ function AcceptInviteForm() {
 
 export default function AcceptInvitePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Card className="shadow-lg border-0">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="w-full max-w-md"
+      >
+        <Card className="  ">
           <CardHeader className="text-center pb-4">
             <div className="flex justify-center mb-3">
-              <div className="bg-indigo-100 rounded-full p-3">
-                <GraduationCap className="h-8 w-8 text-indigo-600" />
+              <div className="bg-ink rounded-full p-3">
+                <GraduationCap className="h-8 w-8 text-white" />
               </div>
             </div>
             <CardTitle className="text-2xl">Complete Your Registration</CardTitle>
@@ -173,12 +179,12 @@ export default function AcceptInvitePage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Suspense fallback={<p className="text-center text-gray-500">Loading...</p>}>
+            <Suspense fallback={<p className="text-center text-ash">Loading...</p>}>
               <AcceptInviteForm />
             </Suspense>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
     </div>
   );
 }

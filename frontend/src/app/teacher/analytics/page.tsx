@@ -84,8 +84,8 @@ export default function TeacherAnalyticsPage() {
         {
           title: "Total Collected",
           value: formatGHS(analytics.totalAmount),
-          bg: "bg-indigo-50",
-          color: "text-indigo-600",
+          bg: "bg-white",
+          color: "text-ink",
         },
         {
           title: "Total Transactions",
@@ -111,14 +111,14 @@ export default function TeacherAnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">My Fee Analytics</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-ink">My Fee Analytics</h1>
+        <p className="text-ash text-sm mt-1">
           Track your fee collection performance over time.
         </p>
       </div>
 
       {/* Date Filter */}
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         <CardContent className="pt-4">
           <div className="flex flex-wrap items-end gap-4">
             <div className="space-y-1.5">
@@ -149,7 +149,7 @@ export default function TeacherAnalyticsPage() {
       </Card>
 
       {loading && (
-        <div className="py-16 text-center text-gray-400">
+        <div className="py-16 text-center text-ash">
           Loading analytics...
         </div>
       )}
@@ -163,9 +163,9 @@ export default function TeacherAnalyticsPage() {
           {/* Summary Cards */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {summaryCards.map((card) => (
-              <Card key={card.title} className="border-0 shadow-sm">
+              <Card key={card.title} className="  ">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">
+                  <CardTitle className="text-sm font-bold text-ash">
                     {card.title}
                   </CardTitle>
                 </CardHeader>
@@ -179,7 +179,7 @@ export default function TeacherAnalyticsPage() {
           </div>
 
           {/* Top Students Table */}
-          <Card className="border-0 shadow-sm">
+          <Card className="  ">
             <CardHeader>
               <CardTitle className="text-base">
                 Top Students by Amount
@@ -187,7 +187,7 @@ export default function TeacherAnalyticsPage() {
             </CardHeader>
             <CardContent className="p-0">
               {analytics.topStudents.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">
+                <div className="p-8 text-center text-ash text-sm">
                   No data for this period.
                 </div>
               ) : (
@@ -205,16 +205,16 @@ export default function TeacherAnalyticsPage() {
                       .sort((a, b) => b.totalAmount - a.totalAmount)
                       .map((s) => (
                         <TableRow key={s.studentId}>
-                          <TableCell className="font-medium">
+                          <TableCell className="font-bold">
                             {s.studentName}
                           </TableCell>
-                          <TableCell className="text-sm text-gray-500">
+                          <TableCell className="text-sm text-ash">
                             {s.className}
                           </TableCell>
-                          <TableCell className="font-semibold text-indigo-700">
+                          <TableCell className="font-bold text-ink">
                             {formatGHS(s.totalAmount)}
                           </TableCell>
-                          <TableCell className="text-gray-500">
+                          <TableCell className="text-ash">
                             {s.count}
                           </TableCell>
                         </TableRow>
@@ -226,13 +226,13 @@ export default function TeacherAnalyticsPage() {
           </Card>
 
           {/* Daily Trend Table */}
-          <Card className="border-0 shadow-sm">
+          <Card className="  ">
             <CardHeader>
               <CardTitle className="text-base">Daily Breakdown</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {analytics.dailyTrend.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">
+                <div className="p-8 text-center text-ash text-sm">
                   No data for this period.
                 </div>
               ) : (
@@ -253,17 +253,17 @@ export default function TeacherAnalyticsPage() {
                       )
                       .map((d) => (
                         <TableRow key={d.date}>
-                          <TableCell className="font-medium">
+                          <TableCell className="font-bold">
                             {new Date(d.date).toLocaleDateString("en-GH", {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
                             })}
                           </TableCell>
-                          <TableCell className="font-semibold text-indigo-700">
+                          <TableCell className="font-bold text-ink">
                             {formatGHS(d.totalAmount)}
                           </TableCell>
-                          <TableCell className="text-gray-500">
+                          <TableCell className="text-ash">
                             {d.count}
                           </TableCell>
                         </TableRow>
@@ -275,13 +275,13 @@ export default function TeacherAnalyticsPage() {
           </Card>
 
           {/* Recent Entries Table */}
-          <Card className="border-0 shadow-sm">
+          <Card className="  ">
             <CardHeader>
               <CardTitle className="text-base">Recent Fee Entries</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {analytics.recentEntries.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">
+                <div className="p-8 text-center text-ash text-sm">
                   No entries found.
                 </div>
               ) : (
@@ -298,23 +298,23 @@ export default function TeacherAnalyticsPage() {
                   <TableBody>
                     {analytics.recentEntries.slice(0, 20).map((f) => (
                       <TableRow key={f.id}>
-                        <TableCell className="text-sm text-gray-500">
+                        <TableCell className="text-sm text-ash">
                           {new Date(f.feeDate).toLocaleDateString("en-GH", {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
                           })}
                         </TableCell>
-                        <TableCell className="font-medium">
+                        <TableCell className="font-bold">
                           {f.studentName}
                         </TableCell>
-                        <TableCell className="text-sm text-gray-500">
+                        <TableCell className="text-sm text-ash">
                           {f.studentClass}
                         </TableCell>
-                        <TableCell className="font-semibold text-indigo-700">
+                        <TableCell className="font-bold text-ink">
                           {formatGHS(f.amount)}
                         </TableCell>
-                        <TableCell className="text-sm text-gray-500">
+                        <TableCell className="text-sm text-ash">
                           {f.description || "—"}
                         </TableCell>
                       </TableRow>

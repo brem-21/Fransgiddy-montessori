@@ -108,15 +108,15 @@ export default function TeacherFeesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Enter Daily Fees</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-ink">Enter Daily Fees</h1>
+        <p className="text-ash text-sm mt-1">
           Record fee payments collected from students.
         </p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Left — Fee Entry Form */}
-        <Card className="border-0 shadow-sm">
+        <Card className="  ">
           <CardHeader>
             <CardTitle className="text-base">Record Fee Payment</CardTitle>
           </CardHeader>
@@ -170,7 +170,7 @@ export default function TeacherFeesPage() {
               <div className="space-y-1.5">
                 <Label htmlFor="description">
                   Description{" "}
-                  <span className="text-gray-400">(optional)</span>
+                  <span className="text-ash">(optional)</span>
                 </Label>
                 <Input
                   id="description"
@@ -200,13 +200,13 @@ export default function TeacherFeesPage() {
         </Card>
 
         {/* Right — Today's Entries */}
-        <Card className="border-0 shadow-sm">
+        <Card className="  ">
           <CardHeader>
             <CardTitle className="text-base">Today&apos;s Entries</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {todayEntries.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">
+              <div className="p-8 text-center text-ash text-sm">
                 No fees recorded today.
               </div>
             ) : (
@@ -225,19 +225,19 @@ export default function TeacherFeesPage() {
                   <TableBody>
                     {todayEntries.map((f) => (
                       <TableRow key={f.id}>
-                        <TableCell className="font-medium">
+                        <TableCell className="font-bold">
                           {f.studentName}
                         </TableCell>
-                        <TableCell className="text-sm text-gray-500 hidden sm:table-cell">
+                        <TableCell className="text-sm text-ash hidden sm:table-cell">
                           {f.studentClass}
                         </TableCell>
-                        <TableCell className="font-semibold text-indigo-700">
+                        <TableCell className="font-bold text-ink">
                           {formatGHS(f.amount)}
                         </TableCell>
-                        <TableCell className="text-sm text-gray-500 hidden sm:table-cell">
+                        <TableCell className="text-sm text-ash hidden sm:table-cell">
                           {f.description || "—"}
                         </TableCell>
-                        <TableCell className="text-xs text-gray-400 hidden md:table-cell">
+                        <TableCell className="text-xs text-ash hidden md:table-cell">
                           {new Date(f.createdAt).toLocaleTimeString("en-GH", {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -248,10 +248,10 @@ export default function TeacherFeesPage() {
                   </TableBody>
                 </Table>
                 </div>
-                <div className="px-4 py-3 border-t border-gray-100 flex justify-end">
-                  <span className="text-sm font-semibold text-gray-700">
+                <div className="px-4 py-3 border-t border-pebble flex justify-end">
+                  <span className="text-sm font-bold text-ink">
                     Total:{" "}
-                    <span className="text-indigo-700">
+                    <span className="text-ink">
                       {formatGHS(todayTotal)}
                     </span>
                   </span>

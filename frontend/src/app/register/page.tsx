@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -64,18 +65,23 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Navbar />
       <div className="pt-24 pb-16 px-4">
-        <div className="max-w-2xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="max-w-2xl mx-auto"
+        >
           {submitted ? (
-            <Card className="text-center shadow-lg border-0 py-10">
+            <Card className="text-center    py-10">
               <CardContent>
                 <CheckCircle className="h-14 w-14 text-green-500 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-2xl font-bold text-ink mb-2">
                   Application Received!
                 </h2>
-                <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+                <p className="text-ash mb-6 max-w-sm mx-auto">
                   Thank you for your interest in Fransgiddy Royal School. We have
                   received your application and will be in touch shortly.
                 </p>
@@ -85,11 +91,11 @@ export default function RegisterPage() {
               </CardContent>
             </Card>
           ) : (
-            <Card className="shadow-lg border-0">
+            <Card className="  ">
               <CardHeader className="text-center">
                 <div className="flex justify-center mb-3">
-                  <div className="bg-indigo-100 rounded-full p-3">
-                    <GraduationCap className="h-7 w-7 text-indigo-600" />
+                  <div className="bg-ink rounded-full p-3">
+                    <GraduationCap className="h-7 w-7 text-white" />
                   </div>
                 </div>
                 <CardTitle className="text-2xl">Admission Enquiry</CardTitle>
@@ -103,7 +109,7 @@ export default function RegisterPage() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   {/* Parent Information */}
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wide">
+                    <h3 className="font-bold text-ink mb-3 text-sm uppercase tracking-wide">
                       Parent / Guardian Information
                     </h3>
                     <div className="space-y-4">
@@ -142,7 +148,7 @@ export default function RegisterPage() {
 
                   {/* Child Information */}
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wide">
+                    <h3 className="font-bold text-ink mb-3 text-sm uppercase tracking-wide">
                       Child Information
                     </h3>
                     <div className="space-y-4">
@@ -212,13 +218,13 @@ export default function RegisterPage() {
                   <div className="space-y-1.5">
                     <Label htmlFor="message">
                       Additional Message{" "}
-                      <span className="text-gray-400">(optional)</span>
+                      <span className="text-ash">(optional)</span>
                     </Label>
                     <textarea
                       id="message"
                       rows={4}
                       placeholder="Any additional information you'd like to share..."
-                      className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                      className="flex w-full rounded-none border border-pebble bg-white px-3 py-2 text-sm placeholder:text-ash focus:outline-none focus:ring-2 focus:ring-clay focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                       {...register("message")}
                     />
                   </div>
@@ -230,7 +236,7 @@ export default function RegisterPage() {
               </CardContent>
             </Card>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -39,63 +39,63 @@ export default function TeacherDashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Teacher Dashboard</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-ink">Teacher Dashboard</h1>
+        <p className="text-ash text-sm mt-1">
           Welcome back, {user?.name}. Ready to make a difference today?
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        <Card className="border-0 shadow-sm">
+        <Card className="  ">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-500">
+              <CardTitle className="text-sm font-bold text-ash">
                 Results Entered
               </CardTitle>
-              <div className="bg-indigo-50 p-2 rounded-lg">
-                <BarChart2 className="h-5 w-5 text-indigo-600" />
+              <div className="bg-white p-2 rounded-none">
+                <BarChart2 className="h-5 w-5 text-ink" />
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="h-7 w-12 bg-gray-100 animate-pulse rounded" />
+              <div className="h-7 w-12 bg-pebble/20 animate-pulse rounded" />
             ) : (
-              <p className="text-3xl font-bold text-gray-900">{resultsCount}</p>
+              <p className="text-3xl font-bold text-ink">{resultsCount}</p>
             )}
-            <p className="text-xs text-gray-400 mt-1">All time</p>
+            <p className="text-xs text-ash mt-1">All time</p>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm">
+        <Card className="  ">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-500">
+              <CardTitle className="text-sm font-bold text-ash">
                 Active Students
               </CardTitle>
-              <div className="bg-blue-50 p-2 rounded-lg">
+              <div className="bg-blue-50 p-2 rounded-none">
                 <BookOpen className="h-5 w-5 text-blue-600" />
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="h-7 w-12 bg-gray-100 animate-pulse rounded" />
+              <div className="h-7 w-12 bg-pebble/20 animate-pulse rounded" />
             ) : (
-              <p className="text-3xl font-bold text-gray-900">{studentsCount}</p>
+              <p className="text-3xl font-bold text-ink">{studentsCount}</p>
             )}
-            <p className="text-xs text-gray-400 mt-1">Currently enrolled</p>
+            <p className="text-xs text-ash mt-1">Currently enrolled</p>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm">
+        <Card className="  ">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-500">
+              <CardTitle className="text-sm font-bold text-ash">
                 Quick Action
               </CardTitle>
-              <div className="bg-green-50 p-2 rounded-lg">
+              <div className="bg-green-50 p-2 rounded-none">
                 <ClipboardCheck className="h-5 w-5 text-green-600" />
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function TeacherDashboardPage() {
       </div>
 
       {/* Quick Links */}
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         <CardHeader>
           <CardTitle className="text-base">Quick Links</CardTitle>
         </CardHeader>
@@ -117,17 +117,17 @@ export default function TeacherDashboardPage() {
           <div className="grid sm:grid-cols-2 gap-3">
             <Link
               href="/teacher/results"
-              className="flex items-center gap-3 p-4 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors"
+              className="flex items-center gap-3 p-4 rounded-none bg-white text-ink hover:bg-ink transition-colors"
             >
               <BarChart2 className="h-5 w-5" />
-              <span className="font-medium text-sm">Enter / View Results</span>
+              <span className="font-bold text-sm">Enter / View Results</span>
             </Link>
             <Link
               href="/teacher/report-card"
-              className="flex items-center gap-3 p-4 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-3 p-4 rounded-none bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
             >
               <BookOpen className="h-5 w-5" />
-              <span className="font-medium text-sm">Generate Report Card</span>
+              <span className="font-bold text-sm">Generate Report Card</span>
             </Link>
           </div>
         </CardContent>

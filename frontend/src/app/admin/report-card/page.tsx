@@ -129,14 +129,14 @@ export default function AdminReportCardPage() {
   return (
     <div className="space-y-6">
       <div className="no-print">
-        <h1 className="text-2xl font-bold text-gray-900">Report Card</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-ink">Report Card</h1>
+        <p className="text-ash text-sm mt-1">
           Generate and print student report cards.
         </p>
       </div>
 
       {/* Filter Form */}
-      <Card className="border-0 shadow-sm no-print">
+      <Card className="   no-print">
         <CardHeader>
           <CardTitle className="text-base">Select Student &amp; Period</CardTitle>
         </CardHeader>
@@ -222,12 +222,12 @@ export default function AdminReportCardPage() {
 
       {/* Teacher Remarks (shown after report card is generated) */}
       {reportCard && (
-        <Card className="border-0 shadow-sm no-print">
+        <Card className="   no-print">
           <CardHeader>
             <CardTitle className="text-base">Teacher&apos;s Remarks</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-ash">
               Auto-selected based on performance ({remarksCategory === "good" ? "Good" : remarksCategory === "mid" ? "Mid" : "Needs Improvement"}).
               Choose a preset or write custom remarks.
             </p>
@@ -239,8 +239,8 @@ export default function AdminReportCardPage() {
                   onClick={() => setTeacherRemarks(preset)}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
                     teacherRemarks === preset
-                      ? "bg-indigo-600 text-white border-indigo-600"
-                      : "bg-white text-gray-600 border-gray-300 hover:border-indigo-400"
+                      ? "bg-clay text-white border-ink"
+                      : "bg-white text-ash border-pebble hover:border-ink"
                   }`}
                 >
                   Preset {i + 1}
@@ -252,7 +252,7 @@ export default function AdminReportCardPage() {
               onChange={(e) => setTeacherRemarks(e.target.value)}
               rows={3}
               placeholder="Write custom teacher remarks..."
-              className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-pebble rounded-none px-3 py-2 text-sm text-ink resize-none focus:outline-none focus:ring-2 focus:ring-clay"
             />
           </CardContent>
         </Card>
@@ -272,63 +272,63 @@ export default function AdminReportCardPage() {
           <div
             ref={printRef}
             id="printable-report-card"
-            className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm max-w-3xl mx-auto"
+            className="bg-white border border-pebble rounded-none p-5   max-w-3xl mx-auto"
           >
             {/* School Header */}
-            <div className="text-center border-b border-gray-200 pb-3 mb-3">
+            <div className="text-center border-b border-pebble pb-3 mb-3">
               <div className="flex items-center justify-center gap-2 mb-1">
-                <GraduationCap className="h-7 w-7 text-indigo-600" />
-                <h1 className="text-xl font-bold text-indigo-700">
+                <GraduationCap className="h-7 w-7 text-ink" />
+                <h1 className="text-xl font-bold text-ink">
                   Fransgiddy Royal School
                 </h1>
               </div>
-              <p className="text-gray-500 text-xs">
+              <p className="text-ash text-xs">
                 Nurturing Curious Minds — Excellence in Montessori Education
               </p>
-              <p className="text-gray-400 text-xs">
+              <p className="text-ash text-xs">
                 123 School Lane, Accra, Ghana | +233 20 000 0000
               </p>
             </div>
 
             {/* Title + Term inline */}
             <div className="flex items-baseline justify-between mb-3">
-              <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide">
+              <h2 className="text-base font-bold text-ink uppercase tracking-wide">
                 Student Report Card
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-ash">
                 {termLabel[reportCard.term]} — {reportCard.academicYear}
               </p>
             </div>
 
             {/* Student Info */}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 mb-3 p-3 bg-gray-50 rounded-lg">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 mb-3 p-3 bg-white rounded-none">
               <div>
-                <span className="text-xs text-gray-500 uppercase">Student Name</span>
-                <p className="font-semibold text-gray-900 text-sm">{reportCard.studentName}</p>
+                <span className="text-xs text-ash uppercase">Student Name</span>
+                <p className="font-bold text-ink text-sm">{reportCard.studentName}</p>
               </div>
               <div>
-                <span className="text-xs text-gray-500 uppercase">Class</span>
-                <p className="font-semibold text-gray-900 text-sm">{reportCard.className}</p>
+                <span className="text-xs text-ash uppercase">Class</span>
+                <p className="font-bold text-ink text-sm">{reportCard.className}</p>
               </div>
               <div>
-                <span className="text-xs text-gray-500 uppercase">Term</span>
-                <p className="font-semibold text-gray-900 text-sm">{termLabel[reportCard.term]}</p>
+                <span className="text-xs text-ash uppercase">Term</span>
+                <p className="font-bold text-ink text-sm">{termLabel[reportCard.term]}</p>
               </div>
               <div>
-                <span className="text-xs text-gray-500 uppercase">Academic Year</span>
-                <p className="font-semibold text-gray-900 text-sm">{reportCard.academicYear}</p>
+                <span className="text-xs text-ash uppercase">Academic Year</span>
+                <p className="font-bold text-ink text-sm">{reportCard.academicYear}</p>
               </div>
               {reportCard.position !== undefined && reportCard.totalStudents !== undefined && (
                 <>
                   <div>
-                    <span className="text-xs text-gray-500 uppercase">Position</span>
-                    <p className="font-semibold text-indigo-700 text-sm">
+                    <span className="text-xs text-ash uppercase">Position</span>
+                    <p className="font-bold text-ink text-sm">
                       {ordinal(reportCard.position)}
                     </p>
                   </div>
                   <div>
-                    <span className="text-xs text-gray-500 uppercase">Total Students</span>
-                    <p className="font-semibold text-gray-900 text-sm">{reportCard.totalStudents}</p>
+                    <span className="text-xs text-ash uppercase">Total Students</span>
+                    <p className="font-bold text-ink text-sm">{reportCard.totalStudents}</p>
                   </div>
                 </>
               )}
@@ -338,22 +338,22 @@ export default function AdminReportCardPage() {
             <div className="mb-3">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-indigo-50">
-                    <TableHead className="font-bold text-gray-700 py-2">Subject</TableHead>
-                    <TableHead className="font-bold text-gray-700 py-2">Score</TableHead>
-                    <TableHead className="font-bold text-gray-700 py-2">Grade</TableHead>
-                    <TableHead className="font-bold text-gray-700 py-2">Remarks</TableHead>
+                  <TableRow className="bg-white">
+                    <TableHead className="font-bold text-ink py-2">Subject</TableHead>
+                    <TableHead className="font-bold text-ink py-2">Score</TableHead>
+                    <TableHead className="font-bold text-ink py-2">Grade</TableHead>
+                    <TableHead className="font-bold text-ink py-2">Remarks</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {reportCard.results.map((r) => (
                     <TableRow key={r.subjectName}>
-                      <TableCell className="font-medium py-1.5">{r.subjectName}</TableCell>
+                      <TableCell className="font-bold py-1.5">{r.subjectName}</TableCell>
                       <TableCell className="py-1.5">{r.score} / 100</TableCell>
                       <TableCell className="py-1.5">
-                        <span className="font-bold text-indigo-600">{r.grade}</span>
+                        <span className="font-bold text-ink">{r.grade}</span>
                       </TableCell>
-                      <TableCell className="text-gray-500 text-sm py-1.5">{r.remarks || "—"}</TableCell>
+                      <TableCell className="text-ash text-sm py-1.5">{r.remarks || "—"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -361,33 +361,33 @@ export default function AdminReportCardPage() {
             </div>
 
             {/* Summary */}
-            <div className="grid grid-cols-3 gap-3 p-3 bg-indigo-50 rounded-lg mb-3">
+            <div className="grid grid-cols-3 gap-3 p-3 bg-white rounded-none mb-3">
               <div className="text-center">
-                <p className="text-xs text-gray-500 uppercase mb-0.5">Total Score</p>
-                <p className="text-lg font-bold text-gray-900">{reportCard.totalScore.toFixed(1)}</p>
+                <p className="text-xs text-ash uppercase mb-0.5">Total Score</p>
+                <p className="text-lg font-bold text-ink">{reportCard.totalScore.toFixed(1)}</p>
               </div>
-              <div className="text-center border-x border-indigo-200">
-                <p className="text-xs text-gray-500 uppercase mb-0.5">Average</p>
-                <p className="text-lg font-bold text-gray-900">{reportCard.average.toFixed(1)}%</p>
+              <div className="text-center border-x border-pebble">
+                <p className="text-xs text-ash uppercase mb-0.5">Average</p>
+                <p className="text-lg font-bold text-ink">{reportCard.average.toFixed(1)}%</p>
               </div>
               <div className="text-center">
-                <p className="text-xs text-gray-500 uppercase mb-0.5">Overall Grade</p>
-                <p className="text-lg font-bold text-indigo-600">{reportCard.overallGrade}</p>
+                <p className="text-xs text-ash uppercase mb-0.5">Overall Grade</p>
+                <p className="text-lg font-bold text-ink">{reportCard.overallGrade}</p>
               </div>
             </div>
 
             {/* Teacher's Remarks */}
             {teacherRemarks && (
-              <div className="mb-3 p-3 border border-gray-200 rounded-lg">
-                <p className="text-xs text-gray-500 uppercase mb-0.5">Class Teacher&apos;s Remarks</p>
-                <p className="text-sm text-gray-800 italic">{teacherRemarks}</p>
+              <div className="mb-3 p-3 border border-pebble rounded-none">
+                <p className="text-xs text-ash uppercase mb-0.5">Class Teacher&apos;s Remarks</p>
+                <p className="text-sm text-ink italic">{teacherRemarks}</p>
               </div>
             )}
 
             {/* School Reopens */}
             {schoolReopens && (
-              <div className="mb-3 text-center py-2 bg-green-50 rounded-lg border border-green-100">
-                <p className="text-sm font-semibold text-green-800">
+              <div className="mb-3 text-center py-2 bg-green-50 rounded-none border border-green-100">
+                <p className="text-sm font-bold text-green-800">
                   School Reopens on{" "}
                   {new Date(schoolReopens).toLocaleDateString("en-GH", {
                     weekday: "long",
@@ -400,14 +400,14 @@ export default function AdminReportCardPage() {
             )}
 
             {/* Signature line */}
-            <div className="mt-4 pt-4 border-t border-gray-200 grid grid-cols-2 gap-8">
+            <div className="mt-4 pt-4 border-t border-pebble grid grid-cols-2 gap-8">
               <div>
-                <div className="h-8 border-b border-gray-300 mb-1" />
-                <p className="text-xs text-gray-400">Class Teacher&apos;s Signature</p>
+                <div className="h-8 border-b border-pebble mb-1" />
+                <p className="text-xs text-ash">Class Teacher&apos;s Signature</p>
               </div>
               <div>
-                <div className="h-8 border-b border-gray-300 mb-1" />
-                <p className="text-xs text-gray-400">Head Teacher&apos;s Signature</p>
+                <div className="h-8 border-b border-pebble mb-1" />
+                <p className="text-xs text-ash">Head Teacher&apos;s Signature</p>
               </div>
             </div>
           </div>

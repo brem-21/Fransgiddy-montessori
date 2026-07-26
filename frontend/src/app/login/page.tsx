@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,6 +37,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    resetField,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -59,6 +61,7 @@ export default function LoginPage() {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message ?? "Invalid phone number or password. Please try again.";
+      resetField("password");
       toast({
         title: "Login Failed",
         description: message,
@@ -70,26 +73,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="w-full max-w-md"
+      >
         {/* Back link */}
         <div className="mb-6 text-center">
           <Link
             href="/"
-            className="text-sm text-indigo-600 hover:underline"
+            className="text-sm font-bold text-ink hover:underline"
           >
             ← Back to Home
           </Link>
         </div>
 
-        <Card className="shadow-lg border-0">
-          <CardHeader className="text-center pb-4">
+        <Card>
+          <CardHeader className="text-center pb-4 border-b-0">
             <div className="flex justify-center mb-3">
-              <div className="bg-indigo-100 rounded-full p-3">
-                <GraduationCap className="h-8 w-8 text-indigo-600" />
+              <div className="bg-ink rounded-full p-3">
+                <GraduationCap className="h-8 w-8 text-white" />
               </div>
             </div>
-            <CardTitle className="text-2xl">Fransgiddy Royal School</CardTitle>
+            <CardTitle className="text-heading">Fransgiddy Royal School</CardTitle>
             <CardDescription>
               Sign in to your account to continue
             </CardDescription>
@@ -126,7 +134,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-ash hover:text-ink transition-transform active:scale-90"
                     aria-label="Toggle password visibility"
                   >
                     {showPassword ? (
@@ -154,7 +162,7 @@ export default function LoginPage() {
               <div className="text-center pt-1">
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-indigo-600 hover:underline"
+                  className="text-sm font-bold text-ink hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -162,7 +170,7 @@ export default function LoginPage() {
             </form>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
     </div>
   );
 }

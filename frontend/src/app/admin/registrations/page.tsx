@@ -83,17 +83,17 @@ export default function AdminRegistrationsPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Registrations</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-ink">Registrations</h1>
+        <p className="text-ash text-sm mt-1">
           Review and manage admission enquiries.
         </p>
       </div>
 
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Loading...</div>
+          <div className="p-8 text-center text-ash">Loading...</div>
         ) : registrations.length === 0 ? (
-          <div className="p-12 text-center text-gray-400">
+          <div className="p-12 text-center text-ash">
             No registrations received yet.
           </div>
         ) : (
@@ -115,8 +115,8 @@ export default function AdminRegistrationsPage() {
                 return (
                   <TableRow key={reg.id}>
                     <TableCell>
-                      <div className="font-medium">{reg.parentName}</div>
-                      <div className="text-xs text-gray-400">{reg.parentPhone}</div>
+                      <div className="font-bold">{reg.parentName}</div>
+                      <div className="text-xs text-ash">{reg.parentPhone}</div>
                     </TableCell>
                     <TableCell>
                       {reg.childFirstName} {reg.childLastName}
@@ -127,7 +127,7 @@ export default function AdminRegistrationsPage() {
                         {config.label}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500">
+                    <TableCell className="text-sm text-ash">
                       {new Date(reg.createdAt).toLocaleDateString("en-GB")}
                     </TableCell>
                     <TableCell>

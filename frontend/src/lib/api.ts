@@ -38,7 +38,9 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      if (typeof window !== "undefined") {
+      const url: string = error.config?.url ?? "";
+      const isAuthRoute = url.includes("/auth/login") || url.includes("/auth/forgot-password");
+      if (!isAuthRoute && typeof window !== "undefined") {
         ["token","user","authToken","jwt","auth_token","user_token","access_token","userToken","auth","session"]
           .forEach((k) => localStorage.removeItem(k));
         window.location.href = "/login";

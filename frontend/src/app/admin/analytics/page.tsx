@@ -179,7 +179,7 @@ export default function AdminAnalyticsPage() {
 
   const summaryCards = analytics
     ? [
-        { title: "Total Collected", value: formatGHS(analytics.totalAmount), bg: "bg-indigo-50", color: "text-indigo-600" },
+        { title: "Total Collected", value: formatGHS(analytics.totalAmount), bg: "bg-white", color: "text-ink" },
         { title: "Total Transactions", value: String(analytics.feeCount), bg: "bg-blue-50", color: "text-blue-600" },
         { title: "Today's Collections", value: formatGHS(analytics.todayAmount), bg: "bg-green-50", color: "text-green-600" },
         { title: "Today's Transactions", value: String(analytics.todayCount), bg: "bg-amber-50", color: "text-amber-600" },
@@ -190,8 +190,8 @@ export default function AdminAnalyticsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">School Fee Analytics</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-ink">School Fee Analytics</h1>
+          <p className="text-ash text-sm mt-1">
             Overview of all fee collections across teachers and students.
           </p>
         </div>
@@ -207,7 +207,7 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {/* Filter Bar */}
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         <CardContent className="pt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             <div className="space-y-1.5">
@@ -284,7 +284,7 @@ export default function AdminAnalyticsPage() {
       </Card>
 
       {loading && (
-        <div className="py-16 text-center text-gray-400">Loading analytics...</div>
+        <div className="py-16 text-center text-ash">Loading analytics...</div>
       )}
 
       {error && !loading && (
@@ -296,9 +296,9 @@ export default function AdminAnalyticsPage() {
           {/* Summary Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {summaryCards.map((card) => (
-              <Card key={card.title} className="border-0 shadow-sm">
+              <Card key={card.title} className="  ">
                 <CardHeader className="pb-1 pt-4 px-4">
-                  <CardTitle className="text-xs sm:text-sm font-medium text-gray-500 leading-tight">
+                  <CardTitle className="text-xs sm:text-sm font-bold text-ash leading-tight">
                     {card.title}
                   </CardTitle>
                 </CardHeader>
@@ -312,13 +312,13 @@ export default function AdminAnalyticsPage() {
           </div>
 
           {/* Collections by Teacher */}
-          <Card className="border-0 shadow-sm">
+          <Card className="  ">
             <CardHeader>
               <CardTitle className="text-base">Collections by Teacher</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {analytics.byTeacher.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">No data for this period.</div>
+                <div className="p-8 text-center text-ash text-sm">No data for this period.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
@@ -335,10 +335,10 @@ export default function AdminAnalyticsPage() {
                         .sort((a, b) => b.totalAmount - a.totalAmount)
                         .map((t) => (
                           <TableRow key={t.teacherId}>
-                            <TableCell className="font-medium">{t.teacherName}</TableCell>
-                            <TableCell className="font-semibold text-indigo-700">{formatGHS(t.totalAmount)}</TableCell>
-                            <TableCell className="text-gray-500">{t.count}</TableCell>
-                            <TableCell className="text-gray-500 hidden sm:table-cell">
+                            <TableCell className="font-bold">{t.teacherName}</TableCell>
+                            <TableCell className="font-bold text-ink">{formatGHS(t.totalAmount)}</TableCell>
+                            <TableCell className="text-ash">{t.count}</TableCell>
+                            <TableCell className="text-ash hidden sm:table-cell">
                               {t.count > 0 ? formatGHS(t.totalAmount / t.count) : "—"}
                             </TableCell>
                           </TableRow>
@@ -351,13 +351,13 @@ export default function AdminAnalyticsPage() {
           </Card>
 
           {/* Top Students */}
-          <Card className="border-0 shadow-sm">
+          <Card className="  ">
             <CardHeader>
               <CardTitle className="text-base">Top Students</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {analytics.topStudents.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">No data for this period.</div>
+                <div className="p-8 text-center text-ash text-sm">No data for this period.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
@@ -374,10 +374,10 @@ export default function AdminAnalyticsPage() {
                         .sort((a, b) => b.totalAmount - a.totalAmount)
                         .map((s) => (
                           <TableRow key={s.studentId}>
-                            <TableCell className="font-medium">{s.studentName}</TableCell>
-                            <TableCell className="text-sm text-gray-500 hidden sm:table-cell">{s.className}</TableCell>
-                            <TableCell className="font-semibold text-indigo-700">{formatGHS(s.totalAmount)}</TableCell>
-                            <TableCell className="text-gray-500">{s.count}</TableCell>
+                            <TableCell className="font-bold">{s.studentName}</TableCell>
+                            <TableCell className="text-sm text-ash hidden sm:table-cell">{s.className}</TableCell>
+                            <TableCell className="font-bold text-ink">{formatGHS(s.totalAmount)}</TableCell>
+                            <TableCell className="text-ash">{s.count}</TableCell>
                           </TableRow>
                         ))}
                     </TableBody>
@@ -388,13 +388,13 @@ export default function AdminAnalyticsPage() {
           </Card>
 
           {/* Daily Breakdown */}
-          <Card className="border-0 shadow-sm">
+          <Card className="  ">
             <CardHeader>
               <CardTitle className="text-base">Daily Breakdown</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {analytics.dailyTrend.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">No data for this period.</div>
+                <div className="p-8 text-center text-ash text-sm">No data for this period.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
@@ -410,15 +410,15 @@ export default function AdminAnalyticsPage() {
                         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                         .map((d) => (
                           <TableRow key={d.date}>
-                            <TableCell className="font-medium">
+                            <TableCell className="font-bold">
                               {new Date(d.date).toLocaleDateString("en-GH", {
                                 day: "numeric",
                                 month: "short",
                                 year: "numeric",
                               })}
                             </TableCell>
-                            <TableCell className="font-semibold text-indigo-700">{formatGHS(d.totalAmount)}</TableCell>
-                            <TableCell className="text-gray-500">{d.count}</TableCell>
+                            <TableCell className="font-bold text-ink">{formatGHS(d.totalAmount)}</TableCell>
+                            <TableCell className="text-ash">{d.count}</TableCell>
                           </TableRow>
                         ))}
                     </TableBody>
@@ -429,13 +429,13 @@ export default function AdminAnalyticsPage() {
           </Card>
 
           {/* Recent Entries */}
-          <Card className="border-0 shadow-sm">
+          <Card className="  ">
             <CardHeader>
               <CardTitle className="text-base">Recent Entries</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {analytics.recentEntries.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">No entries found.</div>
+                <div className="p-8 text-center text-ash text-sm">No entries found.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
@@ -452,17 +452,17 @@ export default function AdminAnalyticsPage() {
                     <TableBody>
                       {analytics.recentEntries.map((f) => (
                         <TableRow key={f.id}>
-                          <TableCell className="text-sm text-gray-500">
+                          <TableCell className="text-sm text-ash">
                             {new Date(f.feeDate).toLocaleDateString("en-GH", {
                               day: "numeric",
                               month: "short",
                             })}
                           </TableCell>
-                          <TableCell className="font-medium">{f.studentName}</TableCell>
-                          <TableCell className="text-sm text-gray-500 hidden sm:table-cell">{f.studentClass}</TableCell>
-                          <TableCell className="font-semibold text-indigo-700">{formatGHS(f.amount)}</TableCell>
-                          <TableCell className="text-sm text-gray-500 hidden md:table-cell">{f.collectedByName}</TableCell>
-                          <TableCell className="text-sm text-gray-500 hidden lg:table-cell">{f.description || "—"}</TableCell>
+                          <TableCell className="font-bold">{f.studentName}</TableCell>
+                          <TableCell className="text-sm text-ash hidden sm:table-cell">{f.studentClass}</TableCell>
+                          <TableCell className="font-bold text-ink">{formatGHS(f.amount)}</TableCell>
+                          <TableCell className="text-sm text-ash hidden md:table-cell">{f.collectedByName}</TableCell>
+                          <TableCell className="text-sm text-ash hidden lg:table-cell">{f.description || "—"}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

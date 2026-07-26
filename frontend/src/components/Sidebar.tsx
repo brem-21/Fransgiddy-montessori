@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   LayoutDashboard,
   FileText,
@@ -86,23 +87,23 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-purple-900 text-white transition-transform duration-200 ease-in-out",
+          "fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-white text-ink border-r border-pebble transition-transform duration-200 ease-in-out",
           "md:relative md:translate-x-0 md:z-auto md:flex",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Logo + mobile close */}
-        <div className="flex items-center justify-between px-5 py-5 border-b border-purple-700 flex-shrink-0">
+        <div className="flex items-center justify-between px-5 py-5 border-b border-pebble flex-shrink-0">
           <div className="flex items-center gap-2">
-            <GraduationCap className="h-7 w-7 text-purple-200" />
+            <GraduationCap className="h-7 w-7 text-ink" />
             <div className="leading-tight">
-              <p className="text-sm font-bold text-white">Fransgiddy</p>
-              <p className="text-xs text-purple-300">Royal School</p>
+              <p className="text-sm font-bold text-ink tracking-tight">Fransgiddy</p>
+              <p className="text-xs text-ash">Royal School</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="md:hidden p-1.5 rounded text-purple-300 hover:text-white hover:bg-purple-800 transition-colors"
+            className="md:hidden p-1.5 rounded text-ash hover:text-ink hover:bg-pebble/20 transition-all active:scale-90"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />
@@ -119,24 +120,33 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  "relative flex items-center gap-3 px-3 py-2.5 rounded-pill text-sm font-bold transition-colors",
                   isActive
-                    ? "bg-purple-700 text-white"
-                    : "text-purple-200 hover:bg-purple-800 hover:text-white"
+                    ? "text-white"
+                    : "text-ash hover:bg-pebble/20 hover:text-ink"
                 )}
               >
-                {item.icon}
-                {item.label}
+                {isActive && (
+                  <motion.span
+                    layoutId="sidebar-active-pill"
+                    className="absolute inset-0 bg-ink rounded-pill"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-3">
+                  {item.icon}
+                  {item.label}
+                </span>
               </Link>
             );
           })}
         </nav>
 
         {/* Logout */}
-        <div className="px-3 py-4 border-t border-purple-700 flex-shrink-0">
+        <div className="px-3 py-4 border-t border-pebble flex-shrink-0">
           <button
             onClick={logout}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-purple-200 hover:bg-purple-800 hover:text-white transition-colors w-full"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-pill text-sm font-bold text-ash hover:bg-pebble/20 hover:text-ink transition-all active:scale-[0.98] w-full"
           >
             <LogOut className="h-4 w-4" />
             Logout

@@ -66,11 +66,16 @@ export default function AdminStudentsPage() {
     formState: { errors },
   } = useForm<StudentFormData>({ resolver: zodResolver(studentSchema) });
 
-  const fetchStudents = async () => {
+  const fetchStudents = async (attempt = 1) => {
     try {
       const res = await studentApi.getAll();
       setStudents(res.data.data);
-    } catch {
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if ((status === 503 || status === 502) && attempt < 3) {
+        await new Promise((r) => setTimeout(r, attempt * 800));
+        return fetchStudents(attempt + 1);
+      }
       toast({ title: "Error", description: "Failed to load students.", variant: "destructive" });
     } finally {
       setLoading(false);
@@ -146,8 +151,8 @@ export default function AdminStudentsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Students</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-ink">Students</h1>
+          <p className="text-ash text-sm mt-1">
             Manage enrolled students.
           </p>
         </div>
@@ -156,20 +161,20 @@ export default function AdminStudentsPage() {
         </Button>
       </div>
 
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         {loading ? (
           <div className="p-6 space-y-3">
             {[1,2,3,4].map((i) => (
               <div key={i} className="flex gap-4 items-center">
-                <div className="h-4 flex-1 bg-gray-100 animate-pulse rounded" />
-                <div className="h-4 w-20 bg-gray-100 animate-pulse rounded" />
-                <div className="h-4 w-28 bg-gray-100 animate-pulse rounded" />
-                <div className="h-4 w-24 bg-gray-100 animate-pulse rounded" />
+                <div className="h-4 flex-1 bg-pebble/20 animate-pulse rounded" />
+                <div className="h-4 w-20 bg-pebble/20 animate-pulse rounded" />
+                <div className="h-4 w-28 bg-pebble/20 animate-pulse rounded" />
+                <div className="h-4 w-24 bg-pebble/20 animate-pulse rounded" />
               </div>
             ))}
           </div>
         ) : students.length === 0 ? (
-          <div className="p-12 text-center text-gray-400">
+          <div className="p-12 text-center text-ash">
             No students enrolled yet.
           </div>
         ) : (
@@ -189,15 +194,15 @@ export default function AdminStudentsPage() {
             <TableBody>
               {students.map((student) => (
                 <TableRow key={student.id}>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-bold">
                     {student.firstName} {student.lastName}
                   </TableCell>
                   <TableCell className="text-sm">{student.className}</TableCell>
                   <TableCell className="text-sm">{student.parentName}</TableCell>
-                  <TableCell className="text-sm text-gray-500">
+                  <TableCell className="text-sm text-ash">
                     {student.parentPhone}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-500">
+                  <TableCell className="text-sm text-ash">
                     {new Date(student.enrollmentDate).toLocaleDateString("en-GB")}
                   </TableCell>
                   <TableCell>

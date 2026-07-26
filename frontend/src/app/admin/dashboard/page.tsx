@@ -77,8 +77,8 @@ export default function AdminDashboardPage() {
     {
       title: "Total Students",
       value: stats.totalStudents,
-      icon: <UserSquare className="h-5 w-5 text-indigo-600" />,
-      bg: "bg-indigo-50",
+      icon: <UserSquare className="h-5 w-5 text-ink" />,
+      bg: "bg-white",
     },
     {
       title: "Teachers",
@@ -103,8 +103,8 @@ export default function AdminDashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Principal Dashboard</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-ink">Principal Dashboard</h1>
+        <p className="text-ash text-sm mt-1">
           Welcome back, {user?.name}. Here&apos;s an overview.
         </p>
       </div>
@@ -112,20 +112,20 @@ export default function AdminDashboardPage() {
       {/* Stat Cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {statCards.map((card) => (
-          <Card key={card.title} className="border-0 shadow-sm">
+          <Card key={card.title} className="  ">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-gray-500">
+                <CardTitle className="text-sm font-bold text-ash">
                   {card.title}
                 </CardTitle>
-                <div className={`${card.bg} p-2 rounded-lg`}>{card.icon}</div>
+                <div className={`${card.bg} p-2 rounded-none`}>{card.icon}</div>
               </div>
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="h-7 w-12 bg-gray-100 animate-pulse rounded" />
+                <div className="h-7 w-12 bg-pebble/20 animate-pulse rounded" />
               ) : (
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-3xl font-bold text-ink">
                   {card.value}
                 </p>
               )}
@@ -135,14 +135,14 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Quick Links */}
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         <CardHeader>
           <CardTitle className="text-base">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { label: "Manage Students", href: "/admin/students", color: "bg-indigo-50 text-indigo-700 hover:bg-indigo-100" },
+              { label: "Manage Students", href: "/admin/students", color: "bg-white text-ink hover:bg-ink" },
               { label: "View Registrations", href: "/admin/registrations", color: "bg-amber-50 text-amber-700 hover:bg-amber-100" },
               { label: "Manage Users", href: "/admin/users", color: "bg-blue-50 text-blue-700 hover:bg-blue-100" },
               { label: "Manage Content", href: "/admin/content", color: "bg-green-50 text-green-700 hover:bg-green-100" },
@@ -150,7 +150,7 @@ export default function AdminDashboardPage() {
               <a
                 key={link.href}
                 href={link.href}
-                className={`flex items-center justify-center rounded-lg p-4 text-sm font-medium transition-colors ${link.color}`}
+                className={`flex items-center justify-center rounded-none p-4 text-sm font-bold transition-colors ${link.color}`}
               >
                 {link.label}
               </a>

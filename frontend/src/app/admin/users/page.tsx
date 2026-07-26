@@ -119,8 +119,8 @@ export default function AdminUsersPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Users</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-ink">Users</h1>
+          <p className="text-ash text-sm mt-1">
             Manage teachers and administrators.
           </p>
         </div>
@@ -129,11 +129,11 @@ export default function AdminUsersPage() {
         </Button>
       </div>
 
-      <Card className="border-0 shadow-sm">
+      <Card className="  ">
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Loading...</div>
+          <div className="p-8 text-center text-ash">Loading...</div>
         ) : users.length === 0 ? (
-          <div className="p-12 text-center text-gray-400">
+          <div className="p-12 text-center text-ash">
             No users found.
           </div>
         ) : (
@@ -152,8 +152,8 @@ export default function AdminUsersPage() {
             <TableBody>
               {users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell className="text-gray-500 text-sm">{user.phone}</TableCell>
+                  <TableCell className="font-bold">{user.name}</TableCell>
+                  <TableCell className="text-ash text-sm">{user.phone}</TableCell>
                   <TableCell>
                     <Badge
                       variant={user.role === "PRINCIPAL" ? "default" : "secondary"}
@@ -169,7 +169,7 @@ export default function AdminUsersPage() {
                       <Badge variant="destructive" className="text-xs">Inactive</Badge>
                     )}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-500">
+                  <TableCell className="text-sm text-ash">
                     {user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB") : "—"}
                   </TableCell>
                   <TableCell className="text-right">
@@ -184,7 +184,7 @@ export default function AdminUsersPage() {
                         {user.active ? (
                           <ToggleRight className="h-4 w-4 text-green-600" />
                         ) : (
-                          <ToggleLeft className="h-4 w-4 text-gray-400" />
+                          <ToggleLeft className="h-4 w-4 text-ash" />
                         )}
                       </Button>
                       <Button
@@ -244,7 +244,7 @@ export default function AdminUsersPage() {
                 <p className="text-xs text-red-600">{errors.password.message}</p>
               )}
             </div>
-            <div className="rounded-md bg-blue-50 p-3 text-sm text-blue-700">
+            <div className="rounded-none bg-blue-50 p-3 text-sm text-blue-700">
               Share the phone number and password with the teacher. They can change their password after logging in.
             </div>
             <DialogFooter>
