@@ -2,14 +2,20 @@ package com.fransgiddy.montessori.controller;
 
 import com.fransgiddy.montessori.dto.ApiResponse;
 import com.fransgiddy.montessori.dto.user.CreateTeacherRequest;
+import com.fransgiddy.montessori.excel.ImportMode;
+import com.fransgiddy.montessori.excel.ImportResult;
 import com.fransgiddy.montessori.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -45,5 +51,22 @@ public class UserController {
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok(ApiResponse.of("User deleted successfully", null));
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<ImportResult>> importUsers(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(defaultValue = "UPSERT") ImportMode mode) throws IOException {
+        ImportResult result = userService.importFromExcel(file, mode);
+        return ResponseEntity.ok(ApiResponse.of("Import completed", result));
+    }
+
+    @GetMapping("/import/template")
+    public ResponseEntity<byte[]> downloadUserTemplate() {
+        byte[] bytes = userService.generateTemplate();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"teachers_template.xlsx\"")
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(bytes);
     }
 }

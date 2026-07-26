@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ExcelImportDialog } from "@/components/ExcelImportDialog";
 import { feeApi, userApi, studentApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -128,11 +129,20 @@ export default function AdminFeesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-ink">Enter Daily Fees</h1>
-        <p className="text-ash text-sm mt-1">
-          Record fee payments on behalf of any teacher or yourself.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-ink">Enter Daily Fees</h1>
+          <p className="text-ash text-sm mt-1">
+            Record fee payments on behalf of any teacher or yourself.
+          </p>
+        </div>
+        <ExcelImportDialog
+          entityLabel="Fees"
+          onImport={feeApi.importExcel}
+          onDownloadTemplate={feeApi.downloadTemplate}
+          templateFilename="fees_template.xlsx"
+          onComplete={fetchData}
+        />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">

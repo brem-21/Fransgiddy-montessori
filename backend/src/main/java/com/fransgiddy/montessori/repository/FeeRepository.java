@@ -33,4 +33,7 @@ public interface FeeRepository extends JpaRepository<Fee, Long> {
 
     @Query("SELECT SUM(f.amount) FROM Fee f WHERE f.feeDate BETWEEN :start AND :end")
     BigDecimal sumByDateRange(@Param("start") LocalDate start, @Param("end") LocalDate end);
+
+    boolean existsByStudentIdAndAmountAndFeeDateAndDescription(
+            Long studentId, BigDecimal amount, LocalDate feeDate, String description);
 }

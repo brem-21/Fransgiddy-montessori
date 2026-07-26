@@ -5,16 +5,24 @@ import com.fransgiddy.montessori.entity.Fee;
 import com.fransgiddy.montessori.entity.Student;
 import com.fransgiddy.montessori.entity.User;
 import com.fransgiddy.montessori.enums.Role;
+import com.fransgiddy.montessori.excel.ExcelUtil;
+import com.fransgiddy.montessori.excel.ImportMode;
+import com.fransgiddy.montessori.excel.ImportResult;
+import com.fransgiddy.montessori.excel.ImportRowError;
 import com.fransgiddy.montessori.repository.FeeRepository;
 import com.fransgiddy.montessori.repository.SchoolClassRepository;
 import com.fransgiddy.montessori.repository.StudentRepository;
 import com.fransgiddy.montessori.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -264,6 +272,79 @@ public class FeeService {
         return feeRepository.findByStudentId(studentId).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    private static final String[] IMPORT_HEADERS = {
+            "Student First Name", "Student Last Name", "Student Date of Birth", "Amount", "Description", "Fee Date"
+    };
+
+    public byte[] generateTemplate() {
+        return ExcelUtil.buildTemplate("Fees", IMPORT_HEADERS,
+                new String[]{"Jane", "Doe", "2016-04-12", "150.00", "Term 1 fees", "2024-09-05"});
+    }
+
+    /**
+     * Fees have no natural key, so rows are always appended. In SKIP_DUPLICATES mode, a row is
+     * skipped if a fee with the same student, amount, date and description already exists —
+     * a safety net against re-importing the same file twice, not a real upsert.
+     */
+    @Transactional
+    public ImportResult importFromExcel(MultipartFile file, ImportMode mode, User currentUser) throws IOException {
+        List<Map<String, String>> rows = ExcelUtil.readRows(file);
+        int created = 0, skipped = 0;
+        List<ImportRowError> errors = new ArrayList<>();
+
+        for (int i = 0; i < rows.size(); i++) {
+            int rowNum = i + 2;
+            Map<String, String> row = rows.get(i);
+            try {
+                String firstName = required(row, "Student First Name");
+                String lastName = required(row, "Student Last Name");
+                LocalDate dob = ExcelUtil.parseDate(required(row, "Student Date of Birth"));
+                BigDecimal amount = new BigDecimal(required(row, "Amount"));
+                String description = row.getOrDefault("Description", "");
+                String feeDateRaw = row.get("Fee Date");
+                LocalDate feeDate = (feeDateRaw == null || feeDateRaw.isBlank())
+                        ? LocalDate.now() : ExcelUtil.parseDate(feeDateRaw);
+
+                Student student = studentRepository
+                        .findByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndDateOfBirth(firstName, lastName, dob)
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "No student found matching " + firstName + " " + lastName + " (DOB " + dob + ")"));
+
+                if (currentUser.getRole() == Role.TEACHER &&
+                        !schoolClassRepository.existsByTeachersIdAndName(currentUser.getId(), student.getClassName())) {
+                    throw new IllegalArgumentException("You are not assigned to " + student.getClassName());
+                }
+
+                if (mode == ImportMode.SKIP_DUPLICATES &&
+                        feeRepository.existsByStudentIdAndAmountAndFeeDateAndDescription(
+                                student.getId(), amount, feeDate, description)) {
+                    skipped++;
+                    continue;
+                }
+
+                Fee fee = new Fee();
+                fee.setStudent(student);
+                fee.setCollectedBy(currentUser);
+                fee.setAmount(amount);
+                fee.setDescription(description);
+                fee.setFeeDate(feeDate);
+                feeRepository.save(fee);
+                created++;
+            } catch (Exception e) {
+                errors.add(new ImportRowError(rowNum, e.getMessage()));
+            }
+        }
+        return new ImportResult(created, 0, skipped, errors);
+    }
+
+    private static String required(Map<String, String> row, String key) {
+        String value = row.get(key);
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("\"" + key + "\" is required");
+        }
+        return value;
     }
 
     private FeeResponse toResponse(Fee fee) {

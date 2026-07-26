@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
+import { ExcelImportDialog } from "@/components/ExcelImportDialog";
 import { userApi } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import type { User } from "@/types";
@@ -124,9 +125,18 @@ export default function AdminUsersPage() {
             Manage teachers and administrators.
           </p>
         </div>
-        <Button onClick={() => { reset(); setDialogOpen(true); }}>
-          <Plus className="h-4 w-4 mr-1" /> Add Teacher
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExcelImportDialog
+            entityLabel="Teachers"
+            onImport={userApi.importExcel}
+            onDownloadTemplate={userApi.downloadTemplate}
+            templateFilename="teachers_template.xlsx"
+            onComplete={fetchUsers}
+          />
+          <Button onClick={() => { reset(); setDialogOpen(true); }}>
+            <Plus className="h-4 w-4 mr-1" /> Add Teacher
+          </Button>
+        </div>
       </div>
 
       <Card className="  ">

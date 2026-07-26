@@ -118,7 +118,7 @@ export function Slideshow() {
     >
       {/* Slide image with fade */}
       <div
-        className={`absolute inset-0 transition-opacity duration-[350ms] ${
+        className={`absolute inset-0 transition-opacity [transition-duration:350ms] ${
           fading ? "opacity-0" : "opacity-100"
         }`}
       >
@@ -135,7 +135,7 @@ export function Slideshow() {
 
       {/* Caption */}
       <div
-        className={`absolute bottom-16 left-0 right-0 px-6 sm:px-16 transition-opacity duration-[350ms] ${
+        className={`absolute bottom-16 left-0 right-0 px-6 sm:px-16 transition-opacity [transition-duration:350ms] ${
           fading ? "opacity-0" : "opacity-100"
         }`}
       >

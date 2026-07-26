@@ -24,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { ExcelImportDialog } from "@/components/ExcelImportDialog";
 import { subjectApi } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import type { Subject } from "@/types";
@@ -124,10 +125,19 @@ export default function SubjectsPage() {
             Manage subjects available for result entry across all classes.
           </p>
         </div>
-        <Button onClick={openAdd}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Subject
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExcelImportDialog
+            entityLabel="Subjects"
+            onImport={subjectApi.importExcel}
+            onDownloadTemplate={subjectApi.downloadTemplate}
+            templateFilename="subjects_template.xlsx"
+            onComplete={load}
+          />
+          <Button onClick={openAdd}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Subject
+          </Button>
+        </div>
       </div>
 
       {/* Filter */}

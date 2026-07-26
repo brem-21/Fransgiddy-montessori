@@ -3,15 +3,21 @@ package com.fransgiddy.montessori.controller;
 import com.fransgiddy.montessori.dto.ApiResponse;
 import com.fransgiddy.montessori.dto.schoolclass.*;
 import com.fransgiddy.montessori.entity.User;
+import com.fransgiddy.montessori.excel.ImportMode;
+import com.fransgiddy.montessori.excel.ImportResult;
 import com.fransgiddy.montessori.service.SchoolClassService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -58,5 +64,22 @@ public class SchoolClassController {
             @PathVariable Long id,
             @RequestBody AssignStudentsRequest request) {
         return ResponseEntity.ok(ApiResponse.of("Students assigned", classService.assignStudents(id, request)));
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<ImportResult>> importClasses(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(defaultValue = "UPSERT") ImportMode mode) throws IOException {
+        ImportResult result = classService.importFromExcel(file, mode);
+        return ResponseEntity.ok(ApiResponse.of("Import completed", result));
+    }
+
+    @GetMapping("/import/template")
+    public ResponseEntity<byte[]> downloadClassTemplate() {
+        byte[] bytes = classService.generateTemplate();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"classes_template.xlsx\"")
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(bytes);
     }
 }

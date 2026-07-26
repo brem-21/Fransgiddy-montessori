@@ -41,6 +41,7 @@ com/fransgiddy/montessori/entity/Result$ResultBuilder.class
 com/fransgiddy/montessori/dto/schoolclass/AssignTeachersRequest.class
 com/fransgiddy/montessori/dto/student/StudentRequest.class
 com/fransgiddy/montessori/security/JwtUtil.class
+com/fransgiddy/montessori/excel/ExcelUtil$1.class
 com/fransgiddy/montessori/dto/schoolclass/SchoolClassRequest.class
 com/fransgiddy/montessori/dto/fee/TeacherAnalyticsResponse$StudentSummary.class
 com/fransgiddy/montessori/dto/fee/PrincipalAnalyticsResponse$TeacherSummary.class

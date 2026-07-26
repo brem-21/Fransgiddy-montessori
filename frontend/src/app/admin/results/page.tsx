@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ExcelImportDialog } from "@/components/ExcelImportDialog";
 import { subjectApi, resultApi } from "@/lib/api";
 import { useMyStudents } from "@/hooks/use-my-students";
 import { toast } from "@/hooks/use-toast";
@@ -103,11 +104,20 @@ export default function TeacherResultsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-ink">Enter Results</h1>
-        <p className="text-ash text-sm mt-1">
-          Record student assessment results.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-ink">Enter Results</h1>
+          <p className="text-ash text-sm mt-1">
+            Record student assessment results.
+          </p>
+        </div>
+        <ExcelImportDialog
+          entityLabel="Results"
+          onImport={resultApi.importExcel}
+          onDownloadTemplate={resultApi.downloadTemplate}
+          templateFilename="results_template.xlsx"
+          onComplete={fetchData}
+        />
       </div>
 
       {/* Entry Form */}

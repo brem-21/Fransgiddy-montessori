@@ -33,6 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
+import { ExcelImportDialog } from "@/components/ExcelImportDialog";
 import { studentApi, classApi } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import type { Student, SchoolClass } from "@/types";
@@ -156,9 +157,18 @@ export default function AdminStudentsPage() {
             Manage enrolled students.
           </p>
         </div>
-        <Button onClick={openAddDialog}>
-          <Plus className="h-4 w-4 mr-1" /> Add Student
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExcelImportDialog
+            entityLabel="Students"
+            onImport={studentApi.importExcel}
+            onDownloadTemplate={studentApi.downloadTemplate}
+            templateFilename="students_template.xlsx"
+            onComplete={fetchStudents}
+          />
+          <Button onClick={openAddDialog}>
+            <Plus className="h-4 w-4 mr-1" /> Add Student
+          </Button>
+        </div>
       </div>
 
       <Card className="  ">

@@ -15,7 +15,23 @@ import type {
   SchoolClass,
   Rankings,
   SmsRequestResponse,
+  ImportResult,
 } from "@/types";
+
+export type ImportMode = "UPSERT" | "SKIP_DUPLICATES";
+
+function importExcel(path: string, file: File, mode: ImportMode) {
+  const formData = new FormData();
+  formData.append("file", file);
+  return apiClient.post<ApiResponse<ImportResult>>(`${path}/import`, formData, {
+    params: { mode },
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
+
+function downloadTemplate(path: string) {
+  return apiClient.get(`${path}/import/template`, { responseType: "blob" });
+}
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081/api",
@@ -85,6 +101,9 @@ export const studentApi = {
 
   getByClass: (className: string) =>
     apiClient.get<ApiResponse<Student[]>>(`/students/class/${className}`),
+
+  importExcel: (file: File, mode: ImportMode) => importExcel("/students", file, mode),
+  downloadTemplate: () => downloadTemplate("/students"),
 };
 
 export const subjectApi = {
@@ -97,6 +116,9 @@ export const subjectApi = {
     apiClient.put<ApiResponse<Subject>>(`/subjects/${id}`, data),
   delete: (id: number) =>
     apiClient.delete<ApiResponse<null>>(`/subjects/${id}`),
+
+  importExcel: (file: File, mode: ImportMode) => importExcel("/subjects", file, mode),
+  downloadTemplate: () => downloadTemplate("/subjects"),
 };
 
 export const resultApi = {
@@ -128,6 +150,9 @@ export const resultApi = {
     apiClient.get<ApiResponse<Transcript>>("/results/transcript", {
       params: { studentId },
     }),
+
+  importExcel: (file: File, mode: ImportMode) => importExcel("/results", file, mode),
+  downloadTemplate: () => downloadTemplate("/results"),
 };
 
 export const announcementApi = {
@@ -227,6 +252,9 @@ export const userApi = {
 
   delete: (id: number) =>
     apiClient.delete<ApiResponse<null>>(`/admin/users/${id}`),
+
+  importExcel: (file: File, mode: ImportMode) => importExcel("/admin/users", file, mode),
+  downloadTemplate: () => downloadTemplate("/admin/users"),
 };
 
 export const classApi = {
@@ -245,6 +273,9 @@ export const classApi = {
     apiClient.put<ApiResponse<SchoolClass>>(`/admin/classes/${id}/students`, { studentIds }),
 
   myClasses: () => apiClient.get<ApiResponse<SchoolClass[]>>("/admin/classes/my-classes"),
+
+  importExcel: (file: File, mode: ImportMode) => importExcel("/admin/classes", file, mode),
+  downloadTemplate: () => downloadTemplate("/admin/classes"),
 };
 
 export const feeApi = {
@@ -284,6 +315,9 @@ export const feeApi = {
     studentId?: number;
     className?: string;
   }) => apiClient.get<ApiResponse<Fee[]>>("/fees/all", { params }),
+
+  importExcel: (file: File, mode: ImportMode) => importExcel("/fees", file, mode),
+  downloadTemplate: () => downloadTemplate("/fees"),
 };
 
 export const settingsApi = {

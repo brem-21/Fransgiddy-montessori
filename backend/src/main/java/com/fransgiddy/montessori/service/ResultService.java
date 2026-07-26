@@ -11,6 +11,10 @@ import com.fransgiddy.montessori.entity.Subject;
 import com.fransgiddy.montessori.entity.User;
 import com.fransgiddy.montessori.enums.Term;
 import com.fransgiddy.montessori.enums.Role;
+import com.fransgiddy.montessori.excel.ExcelUtil;
+import com.fransgiddy.montessori.excel.ImportMode;
+import com.fransgiddy.montessori.excel.ImportResult;
+import com.fransgiddy.montessori.excel.ImportRowError;
 import com.fransgiddy.montessori.repository.ResultRepository;
 import com.fransgiddy.montessori.repository.SchoolClassRepository;
 import com.fransgiddy.montessori.repository.StudentRepository;
@@ -19,7 +23,10 @@ import com.fransgiddy.montessori.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -257,6 +264,93 @@ public class ResultService {
         }
 
         return new RankingsResponse(subjects, ranked);
+    }
+
+    private static final String[] IMPORT_HEADERS = {
+            "Student First Name", "Student Last Name", "Student Date of Birth",
+            "Subject Name", "Class Level", "Term", "Academic Year", "Score", "Remarks"
+    };
+
+    public byte[] generateTemplate() {
+        return ExcelUtil.buildTemplate("Results", IMPORT_HEADERS,
+                new String[]{"Jane", "Doe", "2016-04-12", "Mathematics", "Primary 3", "FIRST", "2024/2025", "85", "Excellent work"});
+    }
+
+    @Transactional
+    public ImportResult importFromExcel(MultipartFile file, ImportMode mode, User teacher) throws IOException {
+        List<Map<String, String>> rows = ExcelUtil.readRows(file);
+        int created = 0, updated = 0, skipped = 0;
+        List<ImportRowError> errors = new ArrayList<>();
+
+        for (int i = 0; i < rows.size(); i++) {
+            int rowNum = i + 2;
+            Map<String, String> row = rows.get(i);
+            try {
+                String firstName = required(row, "Student First Name");
+                String lastName = required(row, "Student Last Name");
+                LocalDate dob = ExcelUtil.parseDate(required(row, "Student Date of Birth"));
+                String subjectName = required(row, "Subject Name");
+                String classLevel = required(row, "Class Level");
+                Term term = Term.valueOf(required(row, "Term").trim().toUpperCase());
+                String academicYear = required(row, "Academic Year");
+                double score = Double.parseDouble(required(row, "Score"));
+                String remarks = row.getOrDefault("Remarks", "");
+
+                Student student = studentRepository
+                        .findByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndDateOfBirth(firstName, lastName, dob)
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "No student found matching " + firstName + " " + lastName + " (DOB " + dob + ")"));
+
+                Subject subject = subjectRepository
+                        .findByNameIgnoreCaseAndClassLevelIgnoreCase(subjectName, classLevel)
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "No subject found matching " + subjectName + " / " + classLevel));
+
+                if (teacher.getRole() == Role.TEACHER &&
+                        !schoolClassRepository.existsByTeachersIdAndName(teacher.getId(), student.getClassName())) {
+                    throw new IllegalArgumentException("You are not assigned to " + student.getClassName());
+                }
+
+                Optional<Result> existing = resultRepository.findByStudentIdAndSubjectIdAndTermAndAcademicYear(
+                        student.getId(), subject.getId(), term, academicYear);
+
+                if (existing.isPresent()) {
+                    if (mode == ImportMode.SKIP_DUPLICATES) {
+                        skipped++;
+                        continue;
+                    }
+                    Result result = existing.get();
+                    result.setScore(score);
+                    result.setRemarks(remarks);
+                    result.setTeacher(teacher);
+                    resultRepository.save(result);
+                    updated++;
+                } else {
+                    Result result = Result.builder()
+                            .student(student)
+                            .subject(subject)
+                            .teacher(teacher)
+                            .term(term)
+                            .academicYear(academicYear)
+                            .score(score)
+                            .remarks(remarks)
+                            .build();
+                    resultRepository.save(result);
+                    created++;
+                }
+            } catch (Exception e) {
+                errors.add(new ImportRowError(rowNum, e.getMessage()));
+            }
+        }
+        return new ImportResult(created, updated, skipped, errors);
+    }
+
+    private static String required(Map<String, String> row, String key) {
+        String value = row.get(key);
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("\"" + key + "\" is required");
+        }
+        return value;
     }
 
     private ResultResponse toResponse(Result result) {

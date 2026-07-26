@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
+import { ExcelImportDialog } from "@/components/ExcelImportDialog";
 import { classApi, userApi, studentApi } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import type { SchoolClass, User, Student } from "@/types";
@@ -147,9 +148,18 @@ export default function AdminClassesPage() {
             Create classes and assign students and teachers.
           </p>
         </div>
-        <Button onClick={() => { reset(); setCreateOpen(true); }} className="bg-clay hover:bg-ink/80">
-          <Plus className="h-4 w-4 mr-1" /> New Class
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExcelImportDialog
+            entityLabel="Classes"
+            onImport={classApi.importExcel}
+            onDownloadTemplate={classApi.downloadTemplate}
+            templateFilename="classes_template.xlsx"
+            onComplete={loadData}
+          />
+          <Button onClick={() => { reset(); setCreateOpen(true); }} className="bg-clay hover:bg-ink/80">
+            <Plus className="h-4 w-4 mr-1" /> New Class
+          </Button>
+        </div>
       </div>
 
       <Card className="  ">

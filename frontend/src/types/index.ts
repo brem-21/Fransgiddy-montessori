@@ -210,3 +210,15 @@ export interface SmsRequestResponse {
   createdAt: string;
   reviewedAt: string | null;
 }
+
+export interface ImportRowError {
+  row: number;
+  message: string;
+}
+
+export interface ImportResult {
+  created: number;
+  updated: number;
+  skipped: number;
+  errors: ImportRowError[];
+}

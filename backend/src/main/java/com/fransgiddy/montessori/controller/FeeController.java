@@ -6,16 +6,22 @@ import com.fransgiddy.montessori.dto.fee.FeeResponse;
 import com.fransgiddy.montessori.dto.fee.PrincipalAnalyticsResponse;
 import com.fransgiddy.montessori.dto.fee.TeacherAnalyticsResponse;
 import com.fransgiddy.montessori.entity.User;
+import com.fransgiddy.montessori.excel.ImportMode;
+import com.fransgiddy.montessori.excel.ImportResult;
 import com.fransgiddy.montessori.service.FeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -86,5 +92,25 @@ public class FeeController {
             @PathVariable Long studentId) {
         List<FeeResponse> fees = feeService.getFeesByStudent(studentId);
         return ResponseEntity.ok(ApiResponse.of("Student fees retrieved successfully", fees));
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
+    public ResponseEntity<ApiResponse<ImportResult>> importFees(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(defaultValue = "UPSERT") ImportMode mode,
+            @AuthenticationPrincipal User currentUser) throws IOException {
+        ImportResult result = feeService.importFromExcel(file, mode, currentUser);
+        return ResponseEntity.ok(ApiResponse.of("Import completed", result));
+    }
+
+    @GetMapping("/import/template")
+    @PreAuthorize("hasRole('PRINCIPAL') or hasRole('TEACHER')")
+    public ResponseEntity<byte[]> downloadFeeTemplate() {
+        byte[] bytes = feeService.generateTemplate();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"fees_template.xlsx\"")
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(bytes);
     }
 }
